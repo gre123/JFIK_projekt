@@ -25,6 +25,7 @@ public class Skaner implements SkanerConstants {
       case ENTER:
       case NOWALINIA:
       case MORETHANLITERA:
+      case KRESKA:
       case URL:
       case EMAIL:
       case LINKO:
@@ -33,6 +34,8 @@ public class Skaner implements SkanerConstants {
       case OBRC:
       case WYMIARY:
       case DOUBLE_SPACE:
+      case LISTAN:
+      case LISTAP:
       case BOLD:
       case ITALICS:
       case UNDERLINE:
@@ -163,6 +166,18 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(WYMIARY);
   {if (true) return i = "WYMIARY";}
       break;
+    case LISTAN:
+      t = jj_consume_token(LISTAN);
+  {if (true) return i = "LISTAn";}
+      break;
+    case LISTAP:
+      t = jj_consume_token(LISTAP);
+  {if (true) return i = "LISTAp";}
+      break;
+    case KRESKA:
+      t = jj_consume_token(KRESKA);
+  {if (true) return i = "KRESKA";}
+      break;
     default:
       jj_la1[1] = jj_gen;
       jj_consume_token(-1);
@@ -188,10 +203,10 @@ public class Skaner implements SkanerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xea46c000,0xea46c000,};
+      jj_la1_0 = new int[] {0xeac6c000,0xeac6c000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x7fff,0x7fff,};
+      jj_la1_1 = new int[] {0x1ffff,0x1ffff,};
    }
 
   /** Constructor with InputStream. */
@@ -308,7 +323,7 @@ public class Skaner implements SkanerConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[53];
+    boolean[] la1tokens = new boolean[55];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -325,7 +340,7 @@ public class Skaner implements SkanerConstants {
         }
       }
     }
-    for (int i = 0; i < 53; i++) {
+    for (int i = 0; i < 55; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

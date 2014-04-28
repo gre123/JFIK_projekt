@@ -76,12 +76,13 @@ TOKEN :
 | < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
 	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
 	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
-| < MORETHANLITERA : ["!"-"~"] >		/*czyli chyba dowolny znak na klawiaturze*/
+| < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
+| ";" | ":" | "'" | "\"" | "\\" | "|" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
 }
 
 TOKEN :
 {
-  < HR : "----" ("-")* < ENTER >>
+  < KRESKA : "---" ("-")+ < ENTER >>
 | < HEADLINE_END : " ==" ("=")* < ENTER >>
 }
 
@@ -113,6 +114,9 @@ TOKEN :
   < WYMIARY : "?" < NUMER > "x" < NUMER >>	//razem z pytajnikiem
   
 | < DOUBLE_SPACE : "  " >
+| < LISTAN : < DOUBLE_SPACE > "*" >
+| < LISTAP : < DOUBLE_SPACE > "-" >
+
 | < BOLD : "**" >
 | < ITALICS : "//" >
 | < UNDERLINE : "__" >
@@ -230,5 +234,11 @@ String Expression() throws NumberFormatException :
  {return i = "OBRc"; }
  | t = <WYMIARY>
  {return i = "WYMIARY"; }
+ | t = <LISTAN>
+ {return i = "LISTAn"; }
+ | t = <LISTAP>
+ {return i = "LISTAp"; }
+  | t = <KRESKA>
+ {return i = "KRESKA"; }
  
 }

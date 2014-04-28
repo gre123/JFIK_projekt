@@ -53,7 +53,7 @@ public interface SkanerConstants {
   /** RegularExpression Id. */
   int MORETHANLITERA = 22;
   /** RegularExpression Id. */
-  int HR = 23;
+  int KRESKA = 23;
   /** RegularExpression Id. */
   int HEADLINE_END = 24;
   /** RegularExpression Id. */
@@ -77,41 +77,45 @@ public interface SkanerConstants {
   /** RegularExpression Id. */
   int DOUBLE_SPACE = 34;
   /** RegularExpression Id. */
-  int BOLD = 35;
+  int LISTAN = 35;
   /** RegularExpression Id. */
-  int ITALICS = 36;
+  int LISTAP = 36;
   /** RegularExpression Id. */
-  int UNDERLINE = 37;
+  int BOLD = 37;
   /** RegularExpression Id. */
-  int NO_FORMAT = 38;
+  int ITALICS = 38;
   /** RegularExpression Id. */
-  int MONO = 39;
+  int UNDERLINE = 39;
   /** RegularExpression Id. */
-  int SPACE = 40;
+  int NO_FORMAT = 40;
   /** RegularExpression Id. */
-  int DELO = 41;
+  int MONO = 41;
   /** RegularExpression Id. */
-  int DELC = 42;
+  int SPACE = 42;
   /** RegularExpression Id. */
-  int SUPO = 43;
+  int DELO = 43;
   /** RegularExpression Id. */
-  int SUPC = 44;
+  int DELC = 44;
   /** RegularExpression Id. */
-  int SUBO = 45;
+  int SUPO = 45;
   /** RegularExpression Id. */
-  int SUBC = 46;
+  int SUPC = 46;
   /** RegularExpression Id. */
-  int CODEO = 47;
+  int SUBO = 47;
   /** RegularExpression Id. */
-  int CODEC = 48;
+  int SUBC = 48;
   /** RegularExpression Id. */
-  int FILEO = 49;
+  int CODEO = 49;
   /** RegularExpression Id. */
-  int FILEC = 50;
+  int CODEC = 50;
   /** RegularExpression Id. */
-  int NOWIKIO = 51;
+  int FILEO = 51;
   /** RegularExpression Id. */
-  int NOWIKIC = 52;
+  int FILEC = 52;
+  /** RegularExpression Id. */
+  int NOWIKIO = 53;
+  /** RegularExpression Id. */
+  int NOWIKIC = 54;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -141,7 +145,7 @@ public interface SkanerConstants {
     "<LITERA>",
     "<OGONEK>",
     "<MORETHANLITERA>",
-    "<HR>",
+    "<KRESKA>",
     "<HEADLINE_END>",
     "<URL>",
     "<DOMENA>",
@@ -153,6 +157,8 @@ public interface SkanerConstants {
     "\"}}\"",
     "<WYMIARY>",
     "\"  \"",
+    "<LISTAN>",
+    "<LISTAP>",
     "\"**\"",
     "\"//\"",
     "\"__\"",
