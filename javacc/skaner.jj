@@ -3,6 +3,9 @@
 options {
   STATIC = false;
   IGNORE_CASE = true;
+  //UNICODE_INPUT = true;
+  //JAVA_UNICODE_ESCAPE = false;
+
 }
 
 PARSER_BEGIN(Skaner)
@@ -13,7 +16,7 @@ public class Skaner {
     throws ParseException, TokenMgrError {
     Skaner interpreter = new Skaner(System.in);
 
-    System.out.println("Dzień Dobry, będę zaraz skanował");
+    System.out.println("Napisz, co mam przeskanowac?");
 
     String result = interpreter.Start();
     System.out.println ("Start returns: " + result);
@@ -45,25 +48,40 @@ TOKEN :
 TOKEN :
 {
   < NUMBER : (< DIGIT >)+ >
-| < WORD : (< LETTER >)+ >
+| < WORD : (< LETTER > | < OGONEK >)+ | "\\\\" (< LETTER > | < OGONEK >)+ >
+//| < FWORD : (< MORETHANLETTER >)+ >
 | < #ALNUM :
     (
       < DIGIT >
     | < LETTER >
     )+ >
-| < PARA :
+| < ENTER :
     "\r"
   | "\n"
   | "\r\n" >
-| < NEW_LINE : "\\\\" >
+| < NOWALINIA : "\\\\" >
 | < #DIGIT : [ "0"-"9" ] >
 | < #LETTER : [ "a"-"z", "A"-"Z" ] >
+/*| < #OGONEK : "\u0104" | "\u0105"
+    | "\u0106" | "\u0107"
+    | "\u0118" | "\u0119"
+    | "\u0141" | "\u0142"
+    | "\u0143" | "\u0144"
+    | "\u00d3" | "\u00f3"
+    | "\u015a" | "\u015b"
+    | "\u0179" | "\u017a"
+    | "\u017b" | "\u017c" >*/
+	
+| < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
+	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
+	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+| < MORETHANLETTER : ["!"-"~"] >		/*czyli chyba dowolny znak na klawiaturze*/
 }
 
 TOKEN :
 {
-  < HR : "----" ("-")* < PARA >>
-| < HEADLINE_END : " ==" ("=")* < PARA >>
+  < HR : "----" ("-")* < ENTER >>
+| < HEADLINE_END : " ==" ("=")* < ENTER >>
 }
 
 TOKEN :
@@ -85,11 +103,21 @@ TOKEN :
 
 TOKEN :
 {
-  < LINKO : "[[" >
-| < LINKC : "]]" >
-| < IMAGEO : "{{" >
+  < IMAGEO : "{{" >
 | < IMAGEC : "}}" >
 | < DOUBLE_SPACE : "  " >
+| < BOLD : "**" >
+| < ITALICS : "//" >
+| < UNDERLINE : "__" >
+| < NO_FORMAT : "%%" >
+| < MONO : "''" >
+| < SPACE : " " >
+}
+
+TOKEN :
+{
+  < LINKO : "[[" >
+| < LINKC : "]]" >
 }
 
 TOKEN :
@@ -128,16 +156,6 @@ TOKEN :
 | < NOWIKIC : "</nowiki>" >
 }
 
-TOKEN :
-{
-  < BOLD : "**" >
-| < ITALICS : "//" >
-| < UNDERLINE : "__" >
-| < NO_FORMAT : "%%" >
-| < MONO : "''" >
-| < SPACE : " " >
-}
-
 String Start() throws NumberFormatException :
 {
     String val="";
@@ -165,21 +183,35 @@ String Expression() throws NumberFormatException :
  {return i = "NO_FORMAT"; }
  | t = <ITALICS>
  {return i = "ITALICS"; }
- | t = <SUBC>
- {return i = "SUBC"; }
- | t = <SUBO>
- {return i = "SUBO"; }
  | t = <NUMBER>
  {return i = "NUMBER"; }
  | t = <WORD>
  {return i = "WORD"; }
   | t = <MONO>
  {return i = "MONO"; }
-   | t = <PARA>
- {return i = "konieclinii"; }
-    | t = <SPACE>
- {return i = "SPACJA"; }
+   | t = <ENTER>
+ {return i = "ENTER"; }
+    | t = <DOUBLE_SPACE>
+ {return i = "DOUBLE_SPACJA"; }
      | t = <UNDERLINE>
  {return i = "PODKRESLENIE"; }
+      | t = <SPACE>
+ {return i = "SPACJA"; }
+       | t = <MORETHANLETTER>
+ {return i = "Superznak"; }
+        | t = <SUPO>
+ {return i = "SUPO"; }
+        | t = <SUPC>
+ {return i = "SUPC"; }
+         | t = <SUBO>
+ {return i = "SUBO"; }
+        | t = <SUBC>
+ {return i = "SUBC"; }
+ | t = <DELO>
+ {return i = "DELo"; }
+ | t = <DELC>
+ {return i = "DELc"; }
+ //| t = <NOWALINIA>
+ //{return i = "NOWALINIA"; }
  
 }

@@ -1,1 +1,1 @@
-DokuWiki supports **bold** //italic// __underlined__ and ''monospaced'' texts Of course you can **__//''combine''//__** all these
+DokuWiki supports **bold** //italic// __underlined__ and ''monospaced'' texts Of course you can **__//''combine''//__** all these.Po prostu Zażółć gęślą jaźń i tak dalej.jhgf ?? jhgfjhgf \\ jhgfh

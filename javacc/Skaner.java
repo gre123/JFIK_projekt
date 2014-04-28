@@ -5,7 +5,7 @@ public class Skaner implements SkanerConstants {
     throws ParseException, TokenMgrError {
     Skaner interpreter = new Skaner(System.in);
 
-    System.out.println("Dzie\u0139\u201e Dobry, b\u00c4\u2122d\u00c4\u2122 zaraz skanowa\u0139\u201a");
+    System.out.println("Napisz, co mam przeskanowac?");
 
     String result = interpreter.Start();
     System.out.println ("Start returns: " + result);
@@ -20,15 +20,21 @@ public class Skaner implements SkanerConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NUMBER:
       case WORD:
-      case PARA:
-      case SUBO:
-      case SUBC:
+      case ENTER:
+      case MORETHANLETTER:
+      case DOUBLE_SPACE:
       case BOLD:
       case ITALICS:
       case UNDERLINE:
       case NO_FORMAT:
       case MONO:
       case SPACE:
+      case DELO:
+      case DELC:
+      case SUPO:
+      case SUPC:
+      case SUBO:
+      case SUBC:
         ;
         break;
       default:
@@ -59,14 +65,6 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(ITALICS);
   {if (true) return i = "ITALICS";}
       break;
-    case SUBC:
-      t = jj_consume_token(SUBC);
-  {if (true) return i = "SUBC";}
-      break;
-    case SUBO:
-      t = jj_consume_token(SUBO);
-  {if (true) return i = "SUBO";}
-      break;
     case NUMBER:
       t = jj_consume_token(NUMBER);
   {if (true) return i = "NUMBER";}
@@ -79,17 +77,49 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(MONO);
   {if (true) return i = "MONO";}
       break;
-    case PARA:
-      t = jj_consume_token(PARA);
-  {if (true) return i = "konieclinii";}
+    case ENTER:
+      t = jj_consume_token(ENTER);
+  {if (true) return i = "ENTER";}
+      break;
+    case DOUBLE_SPACE:
+      t = jj_consume_token(DOUBLE_SPACE);
+  {if (true) return i = "DOUBLE_SPACJA";}
+      break;
+    case UNDERLINE:
+      t = jj_consume_token(UNDERLINE);
+  {if (true) return i = "PODKRESLENIE";}
       break;
     case SPACE:
       t = jj_consume_token(SPACE);
   {if (true) return i = "SPACJA";}
       break;
-    case UNDERLINE:
-      t = jj_consume_token(UNDERLINE);
-  {if (true) return i = "PODKRESLENIE";}
+    case MORETHANLETTER:
+      t = jj_consume_token(MORETHANLETTER);
+  {if (true) return i = "Superznak";}
+      break;
+    case SUPO:
+      t = jj_consume_token(SUPO);
+  {if (true) return i = "SUPO";}
+      break;
+    case SUPC:
+      t = jj_consume_token(SUPC);
+  {if (true) return i = "SUPC";}
+      break;
+    case SUBO:
+      t = jj_consume_token(SUBO);
+  {if (true) return i = "SUBO";}
+      break;
+    case SUBC:
+      t = jj_consume_token(SUBC);
+  {if (true) return i = "SUBC";}
+      break;
+    case DELO:
+      t = jj_consume_token(DELO);
+  {if (true) return i = "DELo";}
+      break;
+    case DELC:
+      t = jj_consume_token(DELC);
+  {if (true) return i = "DELc";}
       break;
     default:
       jj_la1[1] = jj_gen;
@@ -116,10 +146,10 @@ public class Skaner implements SkanerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x58000,0x58000,};
+      jj_la1_0 = new int[] {0x858000,0x858000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x7e060,0x7e060,};
+      jj_la1_1 = new int[] {0x7e7f,0x7e7f,};
    }
 
   /** Constructor with InputStream. */
@@ -236,7 +266,7 @@ public class Skaner implements SkanerConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[51];
+    boolean[] la1tokens = new boolean[53];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -253,7 +283,7 @@ public class Skaner implements SkanerConstants {
         }
       }
     }
-    for (int i = 0; i < 51; i++) {
+    for (int i = 0; i < 53; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
