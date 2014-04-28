@@ -5,14 +5,13 @@
  */
 
 package dwh;
-
-import dwhSkaner.dwhSkaner;
-import java.util.Scanner;
+import java.io.File;
 
 /**
  * Klasa testująca działanie (póki co skanera)
  * 
  */
+
 public class DWH {
 
     /**
@@ -22,18 +21,16 @@ public class DWH {
      * Wypisuje do konsoli otrzymaną listę tokenów
      * @param args the command line arguments
      */
+             
+    public static void generujzPlika(String s)
+    {
+        File plik = new File(s);
+        jflex.Main.generate(plik);
+    }
     public static void main(String[] args) {
-        String odp;
-        dwhSkaner skaner=new dwhSkaner();
-        Scanner sc=new Scanner(System.in);
-        
-        System.out.println("Test skanera");
-        System.out.println("Wpisz napis");
-        odp=sc.nextLine();
-      
-        skaner.ustawInput(odp);
-        while(skaner.czytajDalej()!=null);
-        skaner.wyswietlWynik();
+   
+        String siema = "C:/Users/Grzesiek/Documents/NetBeansProjects/DWH/src/dwh/dwhGrammar.flex";
+        generujzPlika(siema);
 
     }
     
