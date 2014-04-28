@@ -35,59 +35,59 @@ public interface SkanerConstants {
   /** RegularExpression Id. */
   int SYMBOL_REGISTERED = 13;
   /** RegularExpression Id. */
-  int RESOLUTION = 14;
+  int NUMER = 14;
   /** RegularExpression Id. */
-  int NUMBER = 15;
+  int WORD = 15;
   /** RegularExpression Id. */
-  int WORD = 16;
+  int ALNUM = 16;
   /** RegularExpression Id. */
-  int ALNUM = 17;
+  int ENTER = 17;
   /** RegularExpression Id. */
-  int ENTER = 18;
+  int NOWALINIA = 18;
   /** RegularExpression Id. */
-  int NOWALINIA = 19;
+  int CYFRA = 19;
   /** RegularExpression Id. */
-  int DIGIT = 20;
+  int LITERA = 20;
   /** RegularExpression Id. */
-  int LETTER = 21;
+  int OGONEK = 21;
   /** RegularExpression Id. */
-  int OGONEK = 22;
+  int MORETHANLITERA = 22;
   /** RegularExpression Id. */
-  int MORETHANLETTER = 23;
+  int HR = 23;
   /** RegularExpression Id. */
-  int HR = 24;
+  int HEADLINE_END = 24;
   /** RegularExpression Id. */
-  int HEADLINE_END = 25;
+  int URL = 25;
   /** RegularExpression Id. */
-  int URL = 26;
+  int DOMENA = 26;
   /** RegularExpression Id. */
-  int DOMAIN = 27;
+  int EMAIL = 27;
   /** RegularExpression Id. */
-  int E_MAIL = 28;
+  int EMAIL_NAZWA = 28;
   /** RegularExpression Id. */
-  int E_MAIL_USERNAME = 29;
+  int LINKO = 29;
   /** RegularExpression Id. */
-  int IMAGEO = 30;
+  int LINKC = 30;
   /** RegularExpression Id. */
-  int IMAGEC = 31;
+  int OBRO = 31;
   /** RegularExpression Id. */
-  int DOUBLE_SPACE = 32;
+  int OBRC = 32;
   /** RegularExpression Id. */
-  int BOLD = 33;
+  int WYMIARY = 33;
   /** RegularExpression Id. */
-  int ITALICS = 34;
+  int DOUBLE_SPACE = 34;
   /** RegularExpression Id. */
-  int UNDERLINE = 35;
+  int BOLD = 35;
   /** RegularExpression Id. */
-  int NO_FORMAT = 36;
+  int ITALICS = 36;
   /** RegularExpression Id. */
-  int MONO = 37;
+  int UNDERLINE = 37;
   /** RegularExpression Id. */
-  int SPACE = 38;
+  int NO_FORMAT = 38;
   /** RegularExpression Id. */
-  int LINKO = 39;
+  int MONO = 39;
   /** RegularExpression Id. */
-  int LINKC = 40;
+  int SPACE = 40;
   /** RegularExpression Id. */
   int DELO = 41;
   /** RegularExpression Id. */
@@ -132,24 +132,26 @@ public interface SkanerConstants {
     "\"(c)\"",
     "\"(tm)\"",
     "\"(r)\"",
-    "<RESOLUTION>",
-    "<NUMBER>",
+    "<NUMER>",
     "<WORD>",
     "<ALNUM>",
     "<ENTER>",
     "\"\\\\\\\\\"",
-    "<DIGIT>",
-    "<LETTER>",
+    "<CYFRA>",
+    "<LITERA>",
     "<OGONEK>",
-    "<MORETHANLETTER>",
+    "<MORETHANLITERA>",
     "<HR>",
     "<HEADLINE_END>",
     "<URL>",
-    "<DOMAIN>",
-    "<E_MAIL>",
-    "<E_MAIL_USERNAME>",
+    "<DOMENA>",
+    "<EMAIL>",
+    "<EMAIL_NAZWA>",
+    "\"[[\"",
+    "\"]]\"",
     "\"{{\"",
     "\"}}\"",
+    "<WYMIARY>",
     "\"  \"",
     "\"**\"",
     "\"//\"",
@@ -157,8 +159,6 @@ public interface SkanerConstants {
     "\"%%\"",
     "\"\\\'\\\'\"",
     "\" \"",
-    "\"[[\"",
-    "\"]]\"",
     "\"<del>\"",
     "\"</del>\"",
     "\"<sup>\"",

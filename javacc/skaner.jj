@@ -42,26 +42,27 @@ TOKEN :
 | < SYMBOL_COPYRIGHT : "(c)" >
 | < SYMBOL_TRADEMARK : "(tm)" >
 | < SYMBOL_REGISTERED : "(r)" >
-| < RESOLUTION : < NUMBER > "x" < NUMBER >>
+
 }
 
 TOKEN :
 {
-  < NUMBER : (< DIGIT >)+ >
-| < WORD : (< LETTER > | < OGONEK >)+ | "\\\\" (< LETTER > | < OGONEK >)+ >
-//| < FWORD : (< MORETHANLETTER >)+ >
+  < NUMER : (< CYFRA >)+ >
+| < WORD : (< LITERA > | < OGONEK >)+ | "\\\\" (< LITERA > | < OGONEK >)+ >
+//| < HELIKOPTER : "\\\\" (< LITERA > | < OGONEK >)+ >
+//| < FWORD : (< MORETHANLITERA >)+ >
 | < #ALNUM :
     (
-      < DIGIT >
-    | < LETTER >
+      < CYFRA >
+    | < LITERA >
     )+ >
 | < ENTER :
     "\r"
   | "\n"
   | "\r\n" >
 | < NOWALINIA : "\\\\" >
-| < #DIGIT : [ "0"-"9" ] >
-| < #LETTER : [ "a"-"z", "A"-"Z" ] >
+| < #CYFRA : [ "0"-"9" ] >
+| < #LITERA : [ "a"-"z", "A"-"Z" ] >
 /*| < #OGONEK : "\u0104" | "\u0105"
     | "\u0106" | "\u0107"
     | "\u0118" | "\u0119"
@@ -75,7 +76,7 @@ TOKEN :
 | < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
 	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
 	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
-| < MORETHANLETTER : ["!"-"~"] >		/*czyli chyba dowolny znak na klawiaturze*/
+| < MORETHANLITERA : ["!"-"~"] >		/*czyli chyba dowolny znak na klawiaturze*/
 }
 
 TOKEN :
@@ -87,24 +88,30 @@ TOKEN :
 TOKEN :
 {
   < URL :
-    (
-      "www."
-    | "http://"
-    )
-    < DOMAIN >
-    (
-      ("/" < WORD >)* "." < WORD >
-    )? >
-| < #DOMAIN : (< ALNUM > ".")+ < WORD >>
-  //| < E_MAIL_TAG : "<" < E_MAIL > ">" >
-| < E_MAIL : < E_MAIL_USERNAME > "@" < DOMAIN >>
-| < #E_MAIL_USERNAME : (< ALNUM > ".")* < ALNUM >>
+    ("www." | "http://")
+    < DOMENA >
+    ( ("/" < WORD >)* "." < WORD > )? >
+| < #DOMENA : (< ALNUM > ".")+ < WORD >>
+| < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">	//email nie jest rozpoznawany sam z siebie, sprawdziłem
+| < #EMAIL_NAZWA : (< ALNUM > ".")* < ALNUM >>	//prawie jak domena, ale nie całkiem
 }
 
 TOKEN :
 {
-  < IMAGEO : "{{" >
-| < IMAGEC : "}}" >
+  < LINKO : "[[" >	//są też linki bez znaczników i linki z opisem
+| < LINKC : "]]" >
+}
+
+TOKEN :
+{
+  < OBRO : "{{" >
+| < OBRC : "}}" >
+}
+
+TOKEN :
+{
+  < WYMIARY : "?" < NUMER > "x" < NUMER >>	//razem z pytajnikiem
+  
 | < DOUBLE_SPACE : "  " >
 | < BOLD : "**" >
 | < ITALICS : "//" >
@@ -112,12 +119,6 @@ TOKEN :
 | < NO_FORMAT : "%%" >
 | < MONO : "''" >
 | < SPACE : " " >
-}
-
-TOKEN :
-{
-  < LINKO : "[[" >
-| < LINKC : "]]" >
 }
 
 TOKEN :
@@ -156,6 +157,8 @@ TOKEN :
 | < NOWIKIC : "</nowiki>" >
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//Odtąd jest definicja parsera
 String Start() throws NumberFormatException :
 {
     String val="";
@@ -183,8 +186,8 @@ String Expression() throws NumberFormatException :
  {return i = "NO_FORMAT"; }
  | t = <ITALICS>
  {return i = "ITALICS"; }
- | t = <NUMBER>
- {return i = "NUMBER"; }
+ | t = <NUMER>
+ {return i = "NUMER"; }
  | t = <WORD>
  {return i = "WORD"; }
   | t = <MONO>
@@ -192,26 +195,40 @@ String Expression() throws NumberFormatException :
    | t = <ENTER>
  {return i = "ENTER"; }
     | t = <DOUBLE_SPACE>
- {return i = "DOUBLE_SPACJA"; }
+ {return i = "2X_SPACJA"; }
      | t = <UNDERLINE>
  {return i = "PODKRESLENIE"; }
       | t = <SPACE>
  {return i = "SPACJA"; }
-       | t = <MORETHANLETTER>
+       | t = <MORETHANLITERA>
  {return i = "Superznak"; }
         | t = <SUPO>
- {return i = "SUPO"; }
+ {return i = "SUPo"; }
         | t = <SUPC>
- {return i = "SUPC"; }
+ {return i = "SUPc"; }
          | t = <SUBO>
- {return i = "SUBO"; }
+ {return i = "SUBo"; }
         | t = <SUBC>
- {return i = "SUBC"; }
+ {return i = "SUBc"; }
  | t = <DELO>
  {return i = "DELo"; }
  | t = <DELC>
  {return i = "DELc"; }
- //| t = <NOWALINIA>
- //{return i = "NOWALINIA"; }
+ | t = <NOWALINIA>
+ {return i = "NOWALINIA"; }
+ | t = <URL>
+ {return i = "URL"; }
+ | t = <EMAIL>
+ {return i = "EMAIL"; }
+ | t = <LINKO>
+ {return i = "LINKo"; }
+ | t = <LINKC>
+ {return i = "LINKc"; }
+ | t = <OBRO>
+ {return i = "OBRo"; }
+ | t = <OBRC>
+ {return i = "OBRc"; }
+ | t = <WYMIARY>
+ {return i = "WYMIARY"; }
  
 }

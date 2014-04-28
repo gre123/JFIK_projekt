@@ -12,16 +12,26 @@ public class Skaner implements SkanerConstants {
 
   }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+//Odtąd jest definicja parsera
   final public String Start() throws ParseException, NumberFormatException {
     String val="";
         String wynik="";
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NUMBER:
+      case NUMER:
       case WORD:
       case ENTER:
-      case MORETHANLETTER:
+      case NOWALINIA:
+      case MORETHANLITERA:
+      case URL:
+      case EMAIL:
+      case LINKO:
+      case LINKC:
+      case OBRO:
+      case OBRC:
+      case WYMIARY:
       case DOUBLE_SPACE:
       case BOLD:
       case ITALICS:
@@ -65,9 +75,9 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(ITALICS);
   {if (true) return i = "ITALICS";}
       break;
-    case NUMBER:
-      t = jj_consume_token(NUMBER);
-  {if (true) return i = "NUMBER";}
+    case NUMER:
+      t = jj_consume_token(NUMER);
+  {if (true) return i = "NUMER";}
       break;
     case WORD:
       t = jj_consume_token(WORD);
@@ -83,7 +93,7 @@ public class Skaner implements SkanerConstants {
       break;
     case DOUBLE_SPACE:
       t = jj_consume_token(DOUBLE_SPACE);
-  {if (true) return i = "DOUBLE_SPACJA";}
+  {if (true) return i = "2X_SPACJA";}
       break;
     case UNDERLINE:
       t = jj_consume_token(UNDERLINE);
@@ -93,25 +103,25 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(SPACE);
   {if (true) return i = "SPACJA";}
       break;
-    case MORETHANLETTER:
-      t = jj_consume_token(MORETHANLETTER);
+    case MORETHANLITERA:
+      t = jj_consume_token(MORETHANLITERA);
   {if (true) return i = "Superznak";}
       break;
     case SUPO:
       t = jj_consume_token(SUPO);
-  {if (true) return i = "SUPO";}
+  {if (true) return i = "SUPo";}
       break;
     case SUPC:
       t = jj_consume_token(SUPC);
-  {if (true) return i = "SUPC";}
+  {if (true) return i = "SUPc";}
       break;
     case SUBO:
       t = jj_consume_token(SUBO);
-  {if (true) return i = "SUBO";}
+  {if (true) return i = "SUBo";}
       break;
     case SUBC:
       t = jj_consume_token(SUBC);
-  {if (true) return i = "SUBC";}
+  {if (true) return i = "SUBc";}
       break;
     case DELO:
       t = jj_consume_token(DELO);
@@ -120,6 +130,38 @@ public class Skaner implements SkanerConstants {
     case DELC:
       t = jj_consume_token(DELC);
   {if (true) return i = "DELc";}
+      break;
+    case NOWALINIA:
+      t = jj_consume_token(NOWALINIA);
+  {if (true) return i = "NOWALINIA";}
+      break;
+    case URL:
+      t = jj_consume_token(URL);
+  {if (true) return i = "URL";}
+      break;
+    case EMAIL:
+      t = jj_consume_token(EMAIL);
+  {if (true) return i = "EMAIL";}
+      break;
+    case LINKO:
+      t = jj_consume_token(LINKO);
+  {if (true) return i = "LINKo";}
+      break;
+    case LINKC:
+      t = jj_consume_token(LINKC);
+  {if (true) return i = "LINKc";}
+      break;
+    case OBRO:
+      t = jj_consume_token(OBRO);
+  {if (true) return i = "OBRo";}
+      break;
+    case OBRC:
+      t = jj_consume_token(OBRC);
+  {if (true) return i = "OBRc";}
+      break;
+    case WYMIARY:
+      t = jj_consume_token(WYMIARY);
+  {if (true) return i = "WYMIARY";}
       break;
     default:
       jj_la1[1] = jj_gen;
@@ -146,10 +188,10 @@ public class Skaner implements SkanerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x858000,0x858000,};
+      jj_la1_0 = new int[] {0xea46c000,0xea46c000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x7e7f,0x7e7f,};
+      jj_la1_1 = new int[] {0x7fff,0x7fff,};
    }
 
   /** Constructor with InputStream. */
