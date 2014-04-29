@@ -1,0 +1,299 @@
+/* na pewno zadziała, przecież nie jestem debilem */
+
+options {
+  STATIC = false;
+  IGNORE_CASE = true;
+  //UNICODE_INPUT = true;
+  //JAVA_UNICODE_ESCAPE = false;
+
+}
+
+PARSER_BEGIN(Skaner)
+
+public class Skaner {
+
+  public static void main(String args[]) 
+    throws ParseException, TokenMgrError {
+    Skaner interpreter = new Skaner(System.in);
+
+    System.out.println("Napisz, co mam przeskanowac?");
+
+    String result = interpreter.Start();
+    System.out.println ("Start returns: " + result);
+   
+  }
+
+}
+
+PARSER_END(Skaner)
+
+TOKEN :
+{
+  < NUMER : (< CYFRA >)+ >
+| < WORD : (< LITERA > | < OGONEK >)+ | "\\\\" (< LITERA > | < OGONEK >)+ >
+//| < HELIKOPTER : "\\\\" (< LITERA > | < OGONEK >)+ >
+//| < FWORD : (< MORETHANLITERA >)+ >
+| < #ALNUM :
+    (
+      < CYFRA >
+    | < LITERA >
+    )+ >
+| < ENTER :
+    "\r"
+  | "\n"
+  | "\r\n" >
+| < NOWALINIA : "\\\\" >
+| < #CYFRA : [ "0"-"9" ] >
+| < #LITERA : [ "a"-"z", "A"-"Z" ] >
+/*| < #OGONEK : "\u0104" | "\u0105"
+    | "\u0106" | "\u0107"
+    | "\u0118" | "\u0119"
+    | "\u0141" | "\u0142"
+    | "\u0143" | "\u0144"
+    | "\u00d3" | "\u00f3"
+    | "\u015a" | "\u015b"
+    | "\u0179" | "\u017a"
+    | "\u017b" | "\u017c" >*/
+	
+| < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
+	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
+	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+| < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
+| ";" | ":" | "'" | "\"" | "\\" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
+}
+
+TOKEN :
+{
+  < KRESKA : "---" ("-")+ < ENTER >>
+| < HEADLINE : "==" ("=")* < ENTER >>
+}
+
+TOKEN :
+{
+  < URL :
+    ("www." | "http://")
+    < DOMENA >
+    ( ("/" < WORD >)* "." < WORD > )? >
+| < #DOMENA : (< ALNUM > ".")+ < WORD >>
+| < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">	//email nie jest rozpoznawany sam z siebie, sprawdziłem
+| < #EMAIL_NAZWA : (< ALNUM > ".")* < ALNUM >>	//prawie jak domena, ale nie całkiem
+}
+
+TOKEN :
+{
+  < LINKO : "[[" >	//są też linki bez znaczników i linki z opisem
+| < LINKC : "]]" >
+}
+
+TOKEN :
+{
+  < OBRO : "{{" >
+| < OBRC : "}}" >
+}
+
+TOKEN :
+{
+  < WYMIARY : "?" < NUMER > "x" < NUMER >>	//razem z pytajnikiem
+  
+| < DOUBLE_SPACE : "  " >
+| < LISTAN : < DOUBLE_SPACE > "*" >
+| < LISTAP : < DOUBLE_SPACE > "-" >
+
+| < BOLD : "**" >
+| < ITALICS : "//" >
+| < UNDERLINE : "__" >
+| < NO_FORMAT : "%%" >
+| < MONO : "''" >
+| < SPACE : " " >
+}
+
+TOKEN :
+{
+  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
+	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
+	| ":-X" | ":-|" | ";-)" | "^_^"
+	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
+}
+
+
+TOKEN :
+{
+  < SYMBOL : "->" | "<-" | "<->" | "=>" | "<=" | "<=>" 
+	| "--" | "---"
+	| "(c)" | "(tm)" | "(r)" >
+}
+
+TOKEN :
+{
+  < HEADER : "^" >
+| < KOLUMNA : "|" >
+| < VERT_SPAN : ":::" >
+}
+
+TOKEN :
+{
+  < DIALOG : < ENTER > (">")+ >
+}
+
+TOKEN :
+{
+  < DELO : "<del>" >
+| < DELC : "</del>" >
+}
+
+TOKEN :
+{
+  < SUPO : "<sup>" >
+| < SUPC : "</sup>" >
+}
+
+TOKEN :
+{
+  < SUBO : "<sub>" >
+| < SUBC : "</sub>" >
+}
+
+TOKEN :
+{
+  < CODEO : "<code>" >
+| < CODEC : "</code>" >
+}
+
+TOKEN :
+{
+< QUOTEO : "<<" >
+| < QUOTEC : ">>" >
+}
+
+TOKEN :
+{
+  < FILEO : "<file>" >
+| < FILEC : "</file>" >
+}
+
+TOKEN :
+{
+  < NOWIKIO : "<nowiki>" >
+| < NOWIKIC : "</nowiki>" >
+}
+
+TOKEN :
+{
+  < FOOTNOTEO : "((" >
+| < FOOTNOTEC : "))" >
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//Odtąd jest definicja parsera
+String Start() throws NumberFormatException :
+{
+    String val="";
+	String wynik="";
+}
+{
+ (
+   val = Expression ()
+   { wynik = wynik + " " + val; }
+ )*
+ <EOF>
+ {return wynik; }
+}
+
+String Expression() throws NumberFormatException :
+{
+   Token t;
+   String i;
+}
+{
+ t = <BOLD>
+ {return i = "BOLD"; }
+ | t = <NO_FORMAT>
+ {return i = "NO_FORMAT"; }
+ | t = <NOWIKIO>
+ {return i = "NOWIKIo"; }
+ | t = <NOWIKIC>
+ {return i = "NOWIKIc"; }
+ | t = <ITALICS>
+ {return i = "ITALICS"; }
+ | t = <NUMER>
+ {return i = "NUMER"; }
+ | t = <WORD>
+ {return i = "WORD"; }
+| t = <MONO>
+ {return i = "MONO"; }
+| t = <ENTER>
+ {return i = "ENTER"; }
+| t = <DOUBLE_SPACE>
+ {return i = "2X_SPACJA"; }
+| t = <UNDERLINE>
+ {return i = "PODKRESLENIE"; }
+| t = <SPACE>
+ {return i = "SPACJA"; }
+| t = <MORETHANLITERA>
+ {return i = "Superznak"; }
+| t = <SUPO>
+ {return i = "SUPo"; }
+| t = <SUPC>
+ {return i = "SUPc"; }
+| t = <SUBO>
+ {return i = "SUBo"; }
+| t = <SUBC>
+ {return i = "SUBc"; }
+ | t = <DELO>
+ {return i = "DELo"; }
+ | t = <DELC>
+ {return i = "DELc"; }
+ | t = <NOWALINIA>
+ {return i = "NOWALINIA"; }
+ | t = <URL>
+ {return i = "URL"; }
+ | t = <EMAIL>
+ {return i = "EMAIL"; }
+ | t = <LINKO>
+ {return i = "LINKo"; }
+ | t = <LINKC>
+ {return i = "LINKc"; }
+ | t = <OBRO>
+ {return i = "OBRo"; }
+ | t = <OBRC>
+ {return i = "OBRc"; }
+ | t = <WYMIARY>
+ {return i = "WYMIARY"; }
+ | t = <LISTAN>
+ {return i = "LISTAn"; }
+ | t = <LISTAP>
+ {return i = "LISTAp"; }
+  | t = <KRESKA>
+ {return i = "KRESKA"; }
+  | t = <QUOTEO>
+ {return i = "QUOTEo"; }
+  | t = <QUOTEC>
+ {return i = "QUOTEc"; }
+  | t = <CODEO>
+ {return i = "CODEo"; }
+  | t = <CODEC>
+ {return i = "CODEc"; }
+  | t = <FILEO>
+ {return i = "FILEo"; }
+  | t = <FILEC>
+ {return i = "FILEc"; }
+  | t = <EMOTKA>
+ {return i = "EMOTKA"; }
+  | t = <SYMBOL>
+ {return i = "SYMBOL"; }
+  | t = <DIALOG>
+ {return i = "DIALOG"; }
+  | t = <FOOTNOTEO>
+ {return i = "FOOTNOTEo"; }
+  | t = <FOOTNOTEC>
+ {return i = "FOOTNOTEc"; }
+  | t = <HEADLINE>
+ {return i = "HEADLINE"; }
+  | t = <HEADER>
+ {return i = "HEADER"; }
+  | t = <KOLUMNA>
+ {return i = "KOLUMNA"; }
+  | t = <VERT_SPAN>
+ {return i = "VERT_SPAN"; }
+ 
+}
