@@ -57,7 +57,16 @@ TOKEN :
 	
 | < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
 	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
-	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+	| "\u2026" | "\u015f" | "\u201e"	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+	|"\u0104" | "\u0105"
+    | "\u0106" | "\u0107"
+    | "\u0118" | "\u0119"
+    | "\u0141" | "\u0142"
+    | "\u0143" | "\u0144"
+    | "\u00d3" | "\u00f3"
+    | "\u015a" | "\u015b"
+    | "\u0179" | "\u017a"
+    | "\u017b" | "\u017c">
 | < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
 | ";" | ":" | "'" | "\"" | "\\" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
 }

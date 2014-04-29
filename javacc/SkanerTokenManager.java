@@ -580,10 +580,10 @@ private int jjStartNfaWithStates_0(int pos, int kind, int state)
    return jjMoveNfa_0(state, pos + 1);
 }
 static final long[] jjbitVec0 = {
-   0x0L, 0x0L, 0xb3000000000L, 0x1000000010L
+   0x0L, 0x0L, 0xb3000000000L, 0x8001000080010L
 };
 static final long[] jjbitVec1 = {
-   0x660000000000003cL, 0x6000030c0300006L, 0x0L, 0x0L
+   0x66000000030000fcL, 0x1e000030cc30001eL, 0x0L, 0x0L
 };
 static final long[] jjbitVec2 = {
    0x0L, 0x0L, 0x0L, 0x21000000L
