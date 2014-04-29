@@ -289,5 +289,11 @@ String Expression() throws NumberFormatException :
  {return i = "FOOTNOTEc"; }
   | t = <HEADLINE>
  {return i = "HEADLINE"; }
+  | t = <HEADER>
+ {return i = "HEADER"; }
+  | t = <KOLUMNA>
+ {return i = "KOLUMNA"; }
+  | t = <VERT_SPAN>
+ {return i = "VERT_SPAN"; }
  
 }

@@ -45,6 +45,9 @@ public class Skaner implements SkanerConstants {
       case SPACE:
       case EMOTKA:
       case SYMBOL:
+      case HEADER:
+      case KOLUMNA:
+      case VERT_SPAN:
       case DIALOG:
       case DELO:
       case DELC:
@@ -248,6 +251,18 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(HEADLINE);
   {if (true) return i = "HEADLINE";}
       break;
+    case HEADER:
+      t = jj_consume_token(HEADER);
+  {if (true) return i = "HEADER";}
+      break;
+    case KOLUMNA:
+      t = jj_consume_token(KOLUMNA);
+  {if (true) return i = "KOLUMNA";}
+      break;
+    case VERT_SPAN:
+      t = jj_consume_token(VERT_SPAN);
+  {if (true) return i = "VERT_SPAN";}
+      break;
     default:
       jj_la1[1] = jj_gen;
       jj_consume_token(-1);
@@ -276,7 +291,7 @@ public class Skaner implements SkanerConstants {
       jj_la1_0 = new int[] {0xffff5e36,0xffff5e36,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0xffff8,0xffff8,};
+      jj_la1_1 = new int[] {0xfffff,0xfffff,};
    }
 
   /** Constructor with InputStream. */
