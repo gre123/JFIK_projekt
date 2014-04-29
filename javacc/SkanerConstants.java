@@ -9,113 +9,107 @@ public interface SkanerConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int ARROW_RIGHT = 1;
+  int NUMER = 1;
   /** RegularExpression Id. */
-  int ARROW_LEFT = 2;
+  int WORD = 2;
   /** RegularExpression Id. */
-  int ARROW_BI = 3;
+  int ALNUM = 3;
   /** RegularExpression Id. */
-  int DOUBLE_ARROW_RIGHT = 4;
+  int ENTER = 4;
   /** RegularExpression Id. */
-  int DOUBLE_ARROW_LEFT = 5;
+  int NOWALINIA = 5;
   /** RegularExpression Id. */
-  int DOUBLE_ARROW_BI = 6;
+  int CYFRA = 6;
   /** RegularExpression Id. */
-  int QUOTE_OPEN = 7;
+  int LITERA = 7;
   /** RegularExpression Id. */
-  int QUOTE_CLOSE = 8;
+  int OGONEK = 8;
   /** RegularExpression Id. */
-  int DASH_SHORT = 9;
+  int MORETHANLITERA = 9;
   /** RegularExpression Id. */
-  int DASH_LONG = 10;
+  int KRESKA = 10;
   /** RegularExpression Id. */
-  int SYMBOL_COPYRIGHT = 11;
+  int HEADLINE = 11;
   /** RegularExpression Id. */
-  int SYMBOL_TRADEMARK = 12;
+  int URL = 12;
   /** RegularExpression Id. */
-  int SYMBOL_REGISTERED = 13;
+  int DOMENA = 13;
   /** RegularExpression Id. */
-  int NUMER = 14;
+  int EMAIL = 14;
   /** RegularExpression Id. */
-  int WORD = 15;
+  int EMAIL_NAZWA = 15;
   /** RegularExpression Id. */
-  int ALNUM = 16;
+  int LINKO = 16;
   /** RegularExpression Id. */
-  int ENTER = 17;
+  int LINKC = 17;
   /** RegularExpression Id. */
-  int NOWALINIA = 18;
+  int OBRO = 18;
   /** RegularExpression Id. */
-  int CYFRA = 19;
+  int OBRC = 19;
   /** RegularExpression Id. */
-  int LITERA = 20;
+  int WYMIARY = 20;
   /** RegularExpression Id. */
-  int OGONEK = 21;
+  int DOUBLE_SPACE = 21;
   /** RegularExpression Id. */
-  int MORETHANLITERA = 22;
+  int LISTAN = 22;
   /** RegularExpression Id. */
-  int KRESKA = 23;
+  int LISTAP = 23;
   /** RegularExpression Id. */
-  int HEADLINE_END = 24;
+  int BOLD = 24;
   /** RegularExpression Id. */
-  int URL = 25;
+  int ITALICS = 25;
   /** RegularExpression Id. */
-  int DOMENA = 26;
+  int UNDERLINE = 26;
   /** RegularExpression Id. */
-  int EMAIL = 27;
+  int NO_FORMAT = 27;
   /** RegularExpression Id. */
-  int EMAIL_NAZWA = 28;
+  int MONO = 28;
   /** RegularExpression Id. */
-  int LINKO = 29;
+  int SPACE = 29;
   /** RegularExpression Id. */
-  int LINKC = 30;
+  int EMOTKA = 30;
   /** RegularExpression Id. */
-  int OBRO = 31;
+  int SYMBOL = 31;
   /** RegularExpression Id. */
-  int OBRC = 32;
+  int HEADER = 32;
   /** RegularExpression Id. */
-  int WYMIARY = 33;
+  int KOLUMNA = 33;
   /** RegularExpression Id. */
-  int DOUBLE_SPACE = 34;
+  int VERT_SPAN = 34;
   /** RegularExpression Id. */
-  int LISTAN = 35;
+  int DIALOG = 35;
   /** RegularExpression Id. */
-  int LISTAP = 36;
+  int DELO = 36;
   /** RegularExpression Id. */
-  int BOLD = 37;
+  int DELC = 37;
   /** RegularExpression Id. */
-  int ITALICS = 38;
+  int SUPO = 38;
   /** RegularExpression Id. */
-  int UNDERLINE = 39;
+  int SUPC = 39;
   /** RegularExpression Id. */
-  int NO_FORMAT = 40;
+  int SUBO = 40;
   /** RegularExpression Id. */
-  int MONO = 41;
+  int SUBC = 41;
   /** RegularExpression Id. */
-  int SPACE = 42;
+  int CODEO = 42;
   /** RegularExpression Id. */
-  int DELO = 43;
+  int CODEC = 43;
   /** RegularExpression Id. */
-  int DELC = 44;
+  int QUOTEO = 44;
   /** RegularExpression Id. */
-  int SUPO = 45;
+  int QUOTEC = 45;
   /** RegularExpression Id. */
-  int SUPC = 46;
+  int FILEO = 46;
   /** RegularExpression Id. */
-  int SUBO = 47;
+  int FILEC = 47;
   /** RegularExpression Id. */
-  int SUBC = 48;
+  int NOWIKIO = 48;
   /** RegularExpression Id. */
-  int CODEO = 49;
+  int NOWIKIC = 49;
   /** RegularExpression Id. */
-  int CODEC = 50;
+  int FOOTNOTEO = 50;
   /** RegularExpression Id. */
-  int FILEO = 51;
-  /** RegularExpression Id. */
-  int FILEC = 52;
-  /** RegularExpression Id. */
-  int NOWIKIO = 53;
-  /** RegularExpression Id. */
-  int NOWIKIC = 54;
+  int FOOTNOTEC = 51;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -123,19 +117,6 @@ public interface SkanerConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "\"->\"",
-    "\"<-\"",
-    "\"<->\"",
-    "\"=>\"",
-    "\"<=\"",
-    "\"<=>\"",
-    "\"<<\"",
-    "\">>\"",
-    "\"--\"",
-    "\"---\"",
-    "\"(c)\"",
-    "\"(tm)\"",
-    "\"(r)\"",
     "<NUMER>",
     "<WORD>",
     "<ALNUM>",
@@ -146,7 +127,7 @@ public interface SkanerConstants {
     "<OGONEK>",
     "<MORETHANLITERA>",
     "<KRESKA>",
-    "<HEADLINE_END>",
+    "<HEADLINE>",
     "<URL>",
     "<DOMENA>",
     "<EMAIL>",
@@ -165,6 +146,12 @@ public interface SkanerConstants {
     "\"%%\"",
     "\"\\\'\\\'\"",
     "\" \"",
+    "<EMOTKA>",
+    "<SYMBOL>",
+    "\"^\"",
+    "\"|\"",
+    "\":::\"",
+    "<DIALOG>",
     "\"<del>\"",
     "\"</del>\"",
     "\"<sup>\"",
@@ -173,10 +160,14 @@ public interface SkanerConstants {
     "\"</sub>\"",
     "\"<code>\"",
     "\"</code>\"",
+    "\"<<\"",
+    "\">>\"",
     "\"<file>\"",
     "\"</file>\"",
     "\"<nowiki>\"",
     "\"</nowiki>\"",
+    "\"((\"",
+    "\"))\"",
   };
 
 }

@@ -29,24 +29,6 @@ PARSER_END(Skaner)
 
 TOKEN :
 {
-  < ARROW_RIGHT : "->" >
-| < ARROW_LEFT : "<-" >
-| < ARROW_BI : "<->" >
-| < DOUBLE_ARROW_RIGHT : "=>" >
-| < DOUBLE_ARROW_LEFT : "<=" >
-| < DOUBLE_ARROW_BI : "<=>" >
-| < QUOTE_OPEN : "<<" >
-| < QUOTE_CLOSE : ">>" >
-| < DASH_SHORT : "--" >
-| < DASH_LONG : "---" >
-| < SYMBOL_COPYRIGHT : "(c)" >
-| < SYMBOL_TRADEMARK : "(tm)" >
-| < SYMBOL_REGISTERED : "(r)" >
-
-}
-
-TOKEN :
-{
   < NUMER : (< CYFRA >)+ >
 | < WORD : (< LITERA > | < OGONEK >)+ | "\\\\" (< LITERA > | < OGONEK >)+ >
 //| < HELIKOPTER : "\\\\" (< LITERA > | < OGONEK >)+ >
@@ -76,14 +58,14 @@ TOKEN :
 | < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
 	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
 	| "\u2026" | "\u015f" | "\u201e">	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
-| < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "^" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
-| ";" | ":" | "'" | "\"" | "\\" | "|" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
+| < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
+| ";" | ":" | "'" | "\"" | "\\" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
 }
 
 TOKEN :
 {
   < KRESKA : "---" ("-")+ < ENTER >>
-| < HEADLINE_END : " ==" ("=")* < ENTER >>
+| < HEADLINE : "==" ("=")* < ENTER >>
 }
 
 TOKEN :
@@ -127,6 +109,34 @@ TOKEN :
 
 TOKEN :
 {
+  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
+	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
+	| ":-X" | ":-|" | ";-)" | "^_^"
+	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
+}
+
+
+TOKEN :
+{
+  < SYMBOL : "->" | "<-" | "<->" | "=>" | "<=" | "<=>" 
+	| "--" | "---"
+	| "(c)" | "(tm)" | "(r)" >
+}
+
+TOKEN :
+{
+  < HEADER : "^" >
+| < KOLUMNA : "|" >
+| < VERT_SPAN : ":::" >
+}
+
+TOKEN :
+{
+  < DIALOG : < ENTER > (">")+ >
+}
+
+TOKEN :
+{
   < DELO : "<del>" >
 | < DELC : "</del>" >
 }
@@ -151,6 +161,12 @@ TOKEN :
 
 TOKEN :
 {
+< QUOTEO : "<<" >
+| < QUOTEC : ">>" >
+}
+
+TOKEN :
+{
   < FILEO : "<file>" >
 | < FILEC : "</file>" >
 }
@@ -159,6 +175,12 @@ TOKEN :
 {
   < NOWIKIO : "<nowiki>" >
 | < NOWIKIC : "</nowiki>" >
+}
+
+TOKEN :
+{
+  < FOOTNOTEO : "((" >
+| < FOOTNOTEC : "))" >
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -185,34 +207,37 @@ String Expression() throws NumberFormatException :
 {
  t = <BOLD>
  {return i = "BOLD"; }
- |
-  t = <NO_FORMAT>
+ | t = <NO_FORMAT>
  {return i = "NO_FORMAT"; }
+ | t = <NOWIKIO>
+ {return i = "NOWIKIo"; }
+ | t = <NOWIKIC>
+ {return i = "NOWIKIc"; }
  | t = <ITALICS>
  {return i = "ITALICS"; }
  | t = <NUMER>
  {return i = "NUMER"; }
  | t = <WORD>
  {return i = "WORD"; }
-  | t = <MONO>
+| t = <MONO>
  {return i = "MONO"; }
-   | t = <ENTER>
+| t = <ENTER>
  {return i = "ENTER"; }
-    | t = <DOUBLE_SPACE>
+| t = <DOUBLE_SPACE>
  {return i = "2X_SPACJA"; }
-     | t = <UNDERLINE>
+| t = <UNDERLINE>
  {return i = "PODKRESLENIE"; }
-      | t = <SPACE>
+| t = <SPACE>
  {return i = "SPACJA"; }
-       | t = <MORETHANLITERA>
+| t = <MORETHANLITERA>
  {return i = "Superznak"; }
-        | t = <SUPO>
+| t = <SUPO>
  {return i = "SUPo"; }
-        | t = <SUPC>
+| t = <SUPC>
  {return i = "SUPc"; }
-         | t = <SUBO>
+| t = <SUBO>
  {return i = "SUBo"; }
-        | t = <SUBC>
+| t = <SUBC>
  {return i = "SUBc"; }
  | t = <DELO>
  {return i = "DELo"; }
@@ -240,5 +265,29 @@ String Expression() throws NumberFormatException :
  {return i = "LISTAp"; }
   | t = <KRESKA>
  {return i = "KRESKA"; }
+  | t = <QUOTEO>
+ {return i = "QUOTEo"; }
+  | t = <QUOTEC>
+ {return i = "QUOTEc"; }
+  | t = <CODEO>
+ {return i = "CODEo"; }
+  | t = <CODEC>
+ {return i = "CODEc"; }
+  | t = <FILEO>
+ {return i = "FILEo"; }
+  | t = <FILEC>
+ {return i = "FILEc"; }
+  | t = <EMOTKA>
+ {return i = "EMOTKA"; }
+  | t = <SYMBOL>
+ {return i = "SYMBOL"; }
+  | t = <DIALOG>
+ {return i = "DIALOG"; }
+  | t = <FOOTNOTEO>
+ {return i = "FOOTNOTEo"; }
+  | t = <FOOTNOTEC>
+ {return i = "FOOTNOTEc"; }
+  | t = <HEADLINE>
+ {return i = "HEADLINE"; }
  
 }

@@ -26,6 +26,7 @@ public class Skaner implements SkanerConstants {
       case NOWALINIA:
       case MORETHANLITERA:
       case KRESKA:
+      case HEADLINE:
       case URL:
       case EMAIL:
       case LINKO:
@@ -42,12 +43,25 @@ public class Skaner implements SkanerConstants {
       case NO_FORMAT:
       case MONO:
       case SPACE:
+      case EMOTKA:
+      case SYMBOL:
+      case DIALOG:
       case DELO:
       case DELC:
       case SUPO:
       case SUPC:
       case SUBO:
       case SUBC:
+      case CODEO:
+      case CODEC:
+      case QUOTEO:
+      case QUOTEC:
+      case FILEO:
+      case FILEC:
+      case NOWIKIO:
+      case NOWIKIC:
+      case FOOTNOTEO:
+      case FOOTNOTEC:
         ;
         break;
       default:
@@ -73,6 +87,14 @@ public class Skaner implements SkanerConstants {
     case NO_FORMAT:
       t = jj_consume_token(NO_FORMAT);
   {if (true) return i = "NO_FORMAT";}
+      break;
+    case NOWIKIO:
+      t = jj_consume_token(NOWIKIO);
+  {if (true) return i = "NOWIKIo";}
+      break;
+    case NOWIKIC:
+      t = jj_consume_token(NOWIKIC);
+  {if (true) return i = "NOWIKIc";}
       break;
     case ITALICS:
       t = jj_consume_token(ITALICS);
@@ -178,6 +200,54 @@ public class Skaner implements SkanerConstants {
       t = jj_consume_token(KRESKA);
   {if (true) return i = "KRESKA";}
       break;
+    case QUOTEO:
+      t = jj_consume_token(QUOTEO);
+  {if (true) return i = "QUOTEo";}
+      break;
+    case QUOTEC:
+      t = jj_consume_token(QUOTEC);
+  {if (true) return i = "QUOTEc";}
+      break;
+    case CODEO:
+      t = jj_consume_token(CODEO);
+  {if (true) return i = "CODEo";}
+      break;
+    case CODEC:
+      t = jj_consume_token(CODEC);
+  {if (true) return i = "CODEc";}
+      break;
+    case FILEO:
+      t = jj_consume_token(FILEO);
+  {if (true) return i = "FILEo";}
+      break;
+    case FILEC:
+      t = jj_consume_token(FILEC);
+  {if (true) return i = "FILEc";}
+      break;
+    case EMOTKA:
+      t = jj_consume_token(EMOTKA);
+  {if (true) return i = "EMOTKA";}
+      break;
+    case SYMBOL:
+      t = jj_consume_token(SYMBOL);
+  {if (true) return i = "SYMBOL";}
+      break;
+    case DIALOG:
+      t = jj_consume_token(DIALOG);
+  {if (true) return i = "DIALOG";}
+      break;
+    case FOOTNOTEO:
+      t = jj_consume_token(FOOTNOTEO);
+  {if (true) return i = "FOOTNOTEo";}
+      break;
+    case FOOTNOTEC:
+      t = jj_consume_token(FOOTNOTEC);
+  {if (true) return i = "FOOTNOTEc";}
+      break;
+    case HEADLINE:
+      t = jj_consume_token(HEADLINE);
+  {if (true) return i = "HEADLINE";}
+      break;
     default:
       jj_la1[1] = jj_gen;
       jj_consume_token(-1);
@@ -203,10 +273,10 @@ public class Skaner implements SkanerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xeac6c000,0xeac6c000,};
+      jj_la1_0 = new int[] {0xffff5e36,0xffff5e36,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x1ffff,0x1ffff,};
+      jj_la1_1 = new int[] {0xffff8,0xffff8,};
    }
 
   /** Constructor with InputStream. */
@@ -323,7 +393,7 @@ public class Skaner implements SkanerConstants {
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[55];
+    boolean[] la1tokens = new boolean[52];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -340,7 +410,7 @@ public class Skaner implements SkanerConstants {
         }
       }
     }
-    for (int i = 0; i < 55; i++) {
+    for (int i = 0; i < 52; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
