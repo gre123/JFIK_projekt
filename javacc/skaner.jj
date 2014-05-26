@@ -30,7 +30,7 @@ PARSER_END(Skaner)
 TOKEN :
 {
   < NUMER : (< CYFRA >)+ >
-| < WORD : (< LITERA > | < OGONEK >)+ | "\\\\" (< LITERA > | < OGONEK >)+ >
+|<WORD: (< LITERA > | < OGONEK >)+ | "\\\\" (< LITERA > | < OGONEK >)+ >
 //| < HELIKOPTER : "\\\\" (< LITERA > | < OGONEK >)+ >
 //| < FWORD : (< MORETHANLITERA >)+ >
 | < #ALNUM :
@@ -74,7 +74,12 @@ TOKEN :
 TOKEN :
 {
   < KRESKA : "---" ("-")+ < ENTER >>
-| < HEADLINE : "==" ("=")* < ENTER >>
+| < H1 : "======" ("=")* >
+| < H2 : "=====" >
+| < H3 : "====" >
+| < H4 : "===" >
+| < H5 : "==" >
+| < HC : "==" ("=")* (<SPACE>)* <ENTER>>
 }
 
 TOKEN :
@@ -296,10 +301,20 @@ String Expression() throws NumberFormatException :
  {return i = "FOOTNOTEo"; }
   | t = <FOOTNOTEC>
  {return i = "FOOTNOTEc"; }
-  | t = <HEADLINE>
- {return i = "HEADLINE"; }
   | t = <HEADER>
  {return i = "HEADER"; }
+  | t = <H1>
+ {return i = "H1"; }
+  | t = <H2>
+ {return i = "H2"; }
+  | t = <H3>
+ {return i = "H3"; }
+  | t = <H4>
+ {return i = "H4"; }
+  | t = <H5>
+ {return i = "H5"; }
+  | t = <HC>
+ {return i = "Hc"; }
   | t = <KOLUMNA>
  {return i = "KOLUMNA"; }
   | t = <VERT_SPAN>
