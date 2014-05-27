@@ -29,87 +29,97 @@ public interface SkanerConstants {
   /** RegularExpression Id. */
   int KRESKA = 10;
   /** RegularExpression Id. */
-  int HEADLINE = 11;
+  int H1 = 11;
   /** RegularExpression Id. */
-  int URL = 12;
+  int H2 = 12;
   /** RegularExpression Id. */
-  int DOMENA = 13;
+  int H3 = 13;
   /** RegularExpression Id. */
-  int EMAIL = 14;
+  int H4 = 14;
   /** RegularExpression Id. */
-  int EMAIL_NAZWA = 15;
+  int H5 = 15;
   /** RegularExpression Id. */
-  int LINKO = 16;
+  int HC = 16;
   /** RegularExpression Id. */
-  int LINKC = 17;
+  int URL = 17;
   /** RegularExpression Id. */
-  int OBRO = 18;
+  int DOMENA = 18;
   /** RegularExpression Id. */
-  int OBRC = 19;
+  int EMAIL = 19;
   /** RegularExpression Id. */
-  int WYMIARY = 20;
+  int EMAIL_NAZWA = 20;
   /** RegularExpression Id. */
-  int DOUBLE_SPACE = 21;
+  int LINKO = 21;
   /** RegularExpression Id. */
-  int LISTAN = 22;
+  int LINKC = 22;
   /** RegularExpression Id. */
-  int LISTAP = 23;
+  int OBRO = 23;
   /** RegularExpression Id. */
-  int BOLD = 24;
+  int OBRC = 24;
   /** RegularExpression Id. */
-  int ITALICS = 25;
+  int WYMIARY = 25;
   /** RegularExpression Id. */
-  int UNDERLINE = 26;
+  int DOUBLE_SPACE = 26;
   /** RegularExpression Id. */
-  int NO_FORMAT = 27;
+  int LISTAN = 27;
   /** RegularExpression Id. */
-  int MONO = 28;
+  int LISTAP = 28;
   /** RegularExpression Id. */
-  int SPACE = 29;
+  int BOLD = 29;
   /** RegularExpression Id. */
-  int EMOTKA = 30;
+  int ITALICS = 30;
   /** RegularExpression Id. */
-  int SYMBOL = 31;
+  int UNDERLINE = 31;
   /** RegularExpression Id. */
-  int HEADER = 32;
+  int NO_FORMAT = 32;
   /** RegularExpression Id. */
-  int KOLUMNA = 33;
+  int MONO = 33;
   /** RegularExpression Id. */
-  int VERT_SPAN = 34;
+  int SPACE = 34;
   /** RegularExpression Id. */
-  int DIALOG = 35;
+  int EMOTKA = 35;
   /** RegularExpression Id. */
-  int DELO = 36;
+  int SYMBOL = 36;
   /** RegularExpression Id. */
-  int DELC = 37;
+  int HEADER = 37;
   /** RegularExpression Id. */
-  int SUPO = 38;
+  int KOLUMNA = 38;
   /** RegularExpression Id. */
-  int SUPC = 39;
+  int VERT_SPAN = 39;
   /** RegularExpression Id. */
-  int SUBO = 40;
+  int DIALOG = 40;
   /** RegularExpression Id. */
-  int SUBC = 41;
+  int DELO = 41;
   /** RegularExpression Id. */
-  int CODEO = 42;
+  int DELC = 42;
   /** RegularExpression Id. */
-  int CODEC = 43;
+  int SUPO = 43;
   /** RegularExpression Id. */
-  int QUOTEO = 44;
+  int SUPC = 44;
   /** RegularExpression Id. */
-  int QUOTEC = 45;
+  int SUBO = 45;
   /** RegularExpression Id. */
-  int FILEO = 46;
+  int SUBC = 46;
   /** RegularExpression Id. */
-  int FILEC = 47;
+  int CODEO = 47;
   /** RegularExpression Id. */
-  int NOWIKIO = 48;
+  int CODEC = 48;
   /** RegularExpression Id. */
-  int NOWIKIC = 49;
+  int QUOTEO = 49;
   /** RegularExpression Id. */
-  int FOOTNOTEO = 50;
+  int QUOTEC = 50;
   /** RegularExpression Id. */
-  int FOOTNOTEC = 51;
+  int FILEO = 51;
+  /** RegularExpression Id. */
+  int FILEC = 52;
+  /** RegularExpression Id. */
+  int NOWIKIO = 53;
+  /** RegularExpression Id. */
+  int NOWIKIC = 54;
+  /** RegularExpression Id. */
+  int FOOTNOTEO = 55;
+  /** RegularExpression Id. */
+  int FOOTNOTEC = 56;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -127,7 +137,12 @@ public interface SkanerConstants {
     "<OGONEK>",
     "<MORETHANLITERA>",
     "<KRESKA>",
-    "<HEADLINE>",
+    "<H1>",
+    "\"=====\"",
+    "\"====\"",
+    "\"===\"",
+    "\"==\"",
+    "<HC>",
     "<URL>",
     "<DOMENA>",
     "<EMAIL>",

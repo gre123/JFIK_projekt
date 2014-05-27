@@ -89,21 +89,28 @@ public class Gui extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
     java.io.StringReader sr = new java.io.StringReader(jTextAreaIn.getText());
-    sk = new Skaner(sr);
     System.out.println("Zaczynam skanowanie");
-    
-    
-    String result="Coś poszło nie tak";
+    sk = new Skaner(sr);
+    sk.enable_tracing();
+    String result=null;
         try {
             result = sk.Start();
         } catch (ParseException ex) {
-            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+            jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
+            System.out.println(ex.currentToken.image+"  "+ex.getMessage());
+            
+          //  Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NumberFormatException ex) {
-            Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
+        //    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-    
-    jTextAreaOut.setText(result);
+//    
+        
+     //System.out.println( sk.token.);
+    if (result==null){
+    //jTextAreaOut.setText("coś poszło nie tak");
+    }else{
+        jTextAreaOut.setText(result);
+    }
     System.out.println ("Skonczylem");
     }//GEN-LAST:event_jButton1MouseClicked
 

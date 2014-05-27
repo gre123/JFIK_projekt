@@ -20,51 +20,28 @@ public class Skaner implements SkanerConstants {
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case NUMER:
       case WORD:
       case ENTER:
       case NOWALINIA:
       case MORETHANLITERA:
-      case KRESKA:
-      case HEADLINE:
+      case H1:
+      case H2:
+      case H3:
+      case H4:
+      case H5:
       case URL:
-      case EMAIL:
       case LINKO:
-      case LINKC:
-      case OBRO:
-      case OBRC:
-      case WYMIARY:
       case DOUBLE_SPACE:
-      case LISTAN:
-      case LISTAP:
       case BOLD:
       case ITALICS:
       case UNDERLINE:
-      case NO_FORMAT:
       case MONO:
       case SPACE:
       case EMOTKA:
-      case SYMBOL:
-      case HEADER:
-      case KOLUMNA:
-      case VERT_SPAN:
-      case DIALOG:
       case DELO:
-      case DELC:
       case SUPO:
-      case SUPC:
       case SUBO:
-      case SUBC:
       case CODEO:
-      case CODEC:
-      case QUOTEO:
-      case QUOTEC:
-      case FILEO:
-      case FILEC:
-      case NOWIKIO:
-      case NOWIKIC:
-      case FOOTNOTEO:
-      case FOOTNOTEC:
         ;
         break;
       default:
@@ -72,203 +49,603 @@ public class Skaner implements SkanerConstants {
         break label_1;
       }
       val = Expression();
-     wynik = wynik + " " + val;
+     wynik+=val;
     }
     jj_consume_token(0);
   {if (true) return wynik;}
     throw new Error("Missing return statement in function");
   }
 
-  final public String Expression() throws ParseException, NumberFormatException {
+  final public String Expression() throws ParseException {
    Token t;
    String i;
+    if (jj_2_1(2147483647)) {
+      i = formatText();
+          {if (true) return i;}
+    } else if (jj_2_2(2147483647)) {
+      i = code();
+          {if (true) return i;}
+    } else if (jj_2_3(2147483647)) {
+      i = head1();
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case H2:
+        i = head2();
+        break;
+      case H3:
+        i = head3();
+        break;
+      case H4:
+        i = head4();
+        break;
+      case H5:
+        i = head5();
+          {if (true) return i;}
+        break;
+      case WORD:
+        t = jj_consume_token(WORD);
+          {if (true) return t.image;}
+        break;
+      case ENTER:
+        t = jj_consume_token(ENTER);
+          {if (true) return t.image;}
+        break;
+      case DOUBLE_SPACE:
+        t = jj_consume_token(DOUBLE_SPACE);
+          {if (true) return i = "&nbsp&nbsp";}
+        break;
+      case SPACE:
+        t = jj_consume_token(SPACE);
+          {if (true) return i = " ";}
+        break;
+      case MORETHANLITERA:
+        t = jj_consume_token(MORETHANLITERA);
+          {if (true) return i = t.image;}
+        break;
+      case NOWALINIA:
+        t = jj_consume_token(NOWALINIA);
+         {if (true) return i = "<BR>";}
+        break;
+      case EMOTKA:
+        t = jj_consume_token(EMOTKA);
+         {if (true) return i = "<img src="+t.image+".png />";}
+        break;
+      default:
+        jj_la1[1] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String formatText() throws ParseException {
+        String i;
+    if (jj_2_4(2147483647)) {
+      i = boldText();
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case ITALICS:
+        i = italicText();
+        break;
+      case UNDERLINE:
+        i = underlinedText();
+        break;
+      case SUBO:
+        i = subText();
+        break;
+      case MONO:
+        i = monoText();
+        break;
+      case SUPO:
+        i = supText();
+        break;
+      case DELO:
+        i = deleteText();
+        break;
+      case URL:
+      case LINKO:
+        i = link();
+        break;
+      default:
+        jj_la1[2] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+         {if (true) return i;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String boldText() throws ParseException {
+        String i;
+    jj_consume_token(BOLD);
+    i = Expression();
+    jj_consume_token(BOLD);
+         {if (true) return "<b>"+i+"</b>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String italicText() throws ParseException {
+        String i;
+    jj_consume_token(ITALICS);
+    i = Expression();
+    jj_consume_token(ITALICS);
+         {if (true) return "<i>"+i+"</i>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String underlinedText() throws ParseException {
+        String i;
+    jj_consume_token(UNDERLINE);
+    i = Expression();
+    jj_consume_token(UNDERLINE);
+         {if (true) return "<u>"+i+"</u>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String space() throws ParseException {
+        String i;
+    jj_consume_token(SPACE);
+         {if (true) return " ";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String subText() throws ParseException {
+        String i;
+    jj_consume_token(SUBO);
+    i = Expression();
+    jj_consume_token(SUBC);
+         {if (true) return "<sub>"+i+"</sub>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String supText() throws ParseException {
+        String i;
+    jj_consume_token(SUPO);
+    i = Expression();
+    jj_consume_token(SUPC);
+         {if (true) return "<sup>"+i+"</sup>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String monoText() throws ParseException {
+        String i;
+    jj_consume_token(MONO);
+    i = Expression();
+    jj_consume_token(MONO);
+         {if (true) return "<pre>"+i+"</pre>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String deleteText() throws ParseException {
+        String i;
+    jj_consume_token(DELO);
+    i = Expression();
+    jj_consume_token(DELC);
+         {if (true) return "<del>"+i+"</del>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String link() throws ParseException {
+        String i;
+        Token t;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-    case BOLD:
-      t = jj_consume_token(BOLD);
-  {if (true) return i = "BOLD";}
-      break;
-    case NO_FORMAT:
-      t = jj_consume_token(NO_FORMAT);
-  {if (true) return i = "NO_FORMAT";}
-      break;
-    case NOWIKIO:
-      t = jj_consume_token(NOWIKIO);
-  {if (true) return i = "NOWIKIo";}
-      break;
-    case NOWIKIC:
-      t = jj_consume_token(NOWIKIC);
-  {if (true) return i = "NOWIKIc";}
-      break;
-    case ITALICS:
-      t = jj_consume_token(ITALICS);
-  {if (true) return i = "ITALICS";}
-      break;
-    case NUMER:
-      t = jj_consume_token(NUMER);
-  {if (true) return i = "NUMER";}
-      break;
-    case WORD:
-      t = jj_consume_token(WORD);
-  {if (true) return i = "WORD";}
-      break;
-    case MONO:
-      t = jj_consume_token(MONO);
-  {if (true) return i = "MONO";}
-      break;
-    case ENTER:
-      t = jj_consume_token(ENTER);
-  {if (true) return i = "ENTER";}
-      break;
-    case DOUBLE_SPACE:
-      t = jj_consume_token(DOUBLE_SPACE);
-  {if (true) return i = "2X_SPACJA";}
-      break;
-    case UNDERLINE:
-      t = jj_consume_token(UNDERLINE);
-  {if (true) return i = "PODKRESLENIE";}
-      break;
-    case SPACE:
-      t = jj_consume_token(SPACE);
-  {if (true) return i = "SPACJA";}
-      break;
-    case MORETHANLITERA:
-      t = jj_consume_token(MORETHANLITERA);
-  {if (true) return i = "Superznak";}
-      break;
-    case SUPO:
-      t = jj_consume_token(SUPO);
-  {if (true) return i = "SUPo";}
-      break;
-    case SUPC:
-      t = jj_consume_token(SUPC);
-  {if (true) return i = "SUPc";}
-      break;
-    case SUBO:
-      t = jj_consume_token(SUBO);
-  {if (true) return i = "SUBo";}
-      break;
-    case SUBC:
-      t = jj_consume_token(SUBC);
-  {if (true) return i = "SUBc";}
-      break;
-    case DELO:
-      t = jj_consume_token(DELO);
-  {if (true) return i = "DELo";}
-      break;
-    case DELC:
-      t = jj_consume_token(DELC);
-  {if (true) return i = "DELc";}
-      break;
-    case NOWALINIA:
-      t = jj_consume_token(NOWALINIA);
-  {if (true) return i = "NOWALINIA";}
-      break;
     case URL:
       t = jj_consume_token(URL);
-  {if (true) return i = "URL";}
-      break;
-    case EMAIL:
-      t = jj_consume_token(EMAIL);
-  {if (true) return i = "EMAIL";}
+         {if (true) return "<a href="+t.image+">"+t.image+"</a>";}
       break;
     case LINKO:
-      t = jj_consume_token(LINKO);
-  {if (true) return i = "LINKo";}
-      break;
-    case LINKC:
-      t = jj_consume_token(LINKC);
-  {if (true) return i = "LINKc";}
-      break;
-    case OBRO:
-      t = jj_consume_token(OBRO);
-  {if (true) return i = "OBRo";}
-      break;
-    case OBRC:
-      t = jj_consume_token(OBRC);
-  {if (true) return i = "OBRc";}
-      break;
-    case WYMIARY:
-      t = jj_consume_token(WYMIARY);
-  {if (true) return i = "WYMIARY";}
-      break;
-    case LISTAN:
-      t = jj_consume_token(LISTAN);
-  {if (true) return i = "LISTAn";}
-      break;
-    case LISTAP:
-      t = jj_consume_token(LISTAP);
-  {if (true) return i = "LISTAp";}
-      break;
-    case KRESKA:
-      t = jj_consume_token(KRESKA);
-  {if (true) return i = "KRESKA";}
-      break;
-    case QUOTEO:
-      t = jj_consume_token(QUOTEO);
-  {if (true) return i = "QUOTEo";}
-      break;
-    case QUOTEC:
-      t = jj_consume_token(QUOTEC);
-  {if (true) return i = "QUOTEc";}
-      break;
-    case CODEO:
-      t = jj_consume_token(CODEO);
-  {if (true) return i = "CODEo";}
-      break;
-    case CODEC:
-      t = jj_consume_token(CODEC);
-  {if (true) return i = "CODEc";}
-      break;
-    case FILEO:
-      t = jj_consume_token(FILEO);
-  {if (true) return i = "FILEo";}
-      break;
-    case FILEC:
-      t = jj_consume_token(FILEC);
-  {if (true) return i = "FILEc";}
-      break;
-    case EMOTKA:
-      t = jj_consume_token(EMOTKA);
-  {if (true) return i = "EMOTKA";}
-      break;
-    case SYMBOL:
-      t = jj_consume_token(SYMBOL);
-  {if (true) return i = "SYMBOL";}
-      break;
-    case DIALOG:
-      t = jj_consume_token(DIALOG);
-  {if (true) return i = "DIALOG";}
-      break;
-    case FOOTNOTEO:
-      t = jj_consume_token(FOOTNOTEO);
-  {if (true) return i = "FOOTNOTEo";}
-      break;
-    case FOOTNOTEC:
-      t = jj_consume_token(FOOTNOTEC);
-  {if (true) return i = "FOOTNOTEc";}
-      break;
-    case HEADLINE:
-      t = jj_consume_token(HEADLINE);
-  {if (true) return i = "HEADLINE";}
-      break;
-    case HEADER:
-      t = jj_consume_token(HEADER);
-  {if (true) return i = "HEADER";}
-      break;
-    case KOLUMNA:
-      t = jj_consume_token(KOLUMNA);
-  {if (true) return i = "KOLUMNA";}
-      break;
-    case VERT_SPAN:
-      t = jj_consume_token(VERT_SPAN);
-  {if (true) return i = "VERT_SPAN";}
+      jj_consume_token(LINKO);
+      t = jj_consume_token(WORD);
+      jj_consume_token(LINKC);
+         {if (true) return "<a href="+t.image+">"+t.image+"</a>";}
       break;
     default:
-      jj_la1[1] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
     throw new Error("Missing return statement in function");
+  }
+
+  final public String code() throws ParseException {
+        String i;
+    jj_consume_token(CODEO);
+    i = Expression();
+    jj_consume_token(CODEC);
+         {if (true) return "<code>"+i+"</code>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String head1() throws ParseException {
+        String i;
+    jj_consume_token(H1);
+    i = Expression();
+    jj_consume_token(H1);
+         {if (true) return "<h1>"+i+"</h1>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String head2() throws ParseException {
+        String i;
+    jj_consume_token(H2);
+    i = Expression();
+    jj_consume_token(H2);
+         {if (true) return "<h2>"+i+"</h2>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String head3() throws ParseException {
+        String i;
+    jj_consume_token(H3);
+    i = Expression();
+    jj_consume_token(H3);
+         {if (true) return "<h3>"+i+"</h3>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String head4() throws ParseException {
+        String i;
+    jj_consume_token(H4);
+    i = Expression();
+    jj_consume_token(H4);
+         {if (true) return "<h4>"+i+"</h4>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String head5() throws ParseException {
+        String i;
+    jj_consume_token(H5);
+    i = Expression();
+    jj_consume_token(H5);
+         {if (true) return "<h5>"+i+"</h5>";}
+    throw new Error("Missing return statement in function");
+  }
+
+  private boolean jj_2_1(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_1(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  private boolean jj_2_2(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_2(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(1, xla); }
+  }
+
+  private boolean jj_2_3(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_3(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(2, xla); }
+  }
+
+  private boolean jj_2_4(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_4(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(3, xla); }
+  }
+
+  private boolean jj_3R_15() {
+    if (jj_scan_token(ITALICS)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(ITALICS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_38() {
+    if (jj_scan_token(H2)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(H2)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_11() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_26() {
+    if (jj_3R_39()) return true;
+    return false;
+  }
+
+  private boolean jj_3_4() {
+    if (jj_3R_5()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_5() {
+    if (jj_scan_token(BOLD)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(BOLD)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_4() {
+    if (jj_scan_token(H1)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(H1)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_25() {
+    if (jj_3R_38()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_10() {
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_3() {
+    if (jj_scan_token(CODEO)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(CODEC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_6() {
+    if (jj_3R_5()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_2() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_6()) {
+    jj_scanpos = xsp;
+    if (jj_3R_7()) {
+    jj_scanpos = xsp;
+    if (jj_3R_8()) {
+    jj_scanpos = xsp;
+    if (jj_3R_9()) {
+    jj_scanpos = xsp;
+    if (jj_3R_10()) {
+    jj_scanpos = xsp;
+    if (jj_3R_11()) {
+    jj_scanpos = xsp;
+    if (jj_3R_12()) {
+    jj_scanpos = xsp;
+    if (jj_3R_13()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_37() {
+    if (jj_scan_token(LINKO)) return true;
+    if (jj_scan_token(WORD)) return true;
+    if (jj_scan_token(LINKC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_35() {
+    if (jj_scan_token(EMOTKA)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_36() {
+    if (jj_scan_token(URL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_21() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_36()) {
+    jj_scanpos = xsp;
+    if (jj_3R_37()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_34() {
+    if (jj_scan_token(NOWALINIA)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_33() {
+    if (jj_scan_token(MORETHANLITERA)) return true;
+    return false;
+  }
+
+  private boolean jj_3_3() {
+    if (jj_3R_4()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_32() {
+    if (jj_scan_token(SPACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_3R_3()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_2()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_31() {
+    if (jj_scan_token(DOUBLE_SPACE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_30() {
+    if (jj_scan_token(ENTER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_9() {
+    if (jj_3R_17()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_20() {
+    if (jj_scan_token(DELO)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(DELC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_29() {
+    if (jj_scan_token(WORD)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_24() {
+    if (jj_3R_4()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    if (jj_3R_3()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_22() {
+    if (jj_3R_2()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_23()) {
+    jj_scanpos = xsp;
+    if (jj_3R_24()) {
+    jj_scanpos = xsp;
+    if (jj_3R_25()) {
+    jj_scanpos = xsp;
+    if (jj_3R_26()) {
+    jj_scanpos = xsp;
+    if (jj_3R_27()) {
+    jj_scanpos = xsp;
+    if (jj_3R_28()) {
+    jj_scanpos = xsp;
+    if (jj_3R_29()) {
+    jj_scanpos = xsp;
+    if (jj_3R_30()) {
+    jj_scanpos = xsp;
+    if (jj_3R_31()) {
+    jj_scanpos = xsp;
+    if (jj_3R_32()) {
+    jj_scanpos = xsp;
+    if (jj_3R_33()) {
+    jj_scanpos = xsp;
+    if (jj_3R_34()) {
+    jj_scanpos = xsp;
+    if (jj_3R_35()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_18() {
+    if (jj_scan_token(MONO)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(MONO)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_19() {
+    if (jj_scan_token(SUPO)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(SUPC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_8() {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_13() {
+    if (jj_3R_21()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_17() {
+    if (jj_scan_token(SUBO)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(SUBC)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_41() {
+    if (jj_scan_token(H5)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(H5)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_28() {
+    if (jj_3R_41()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_7() {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_scan_token(H4)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(H4)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_12() {
+    if (jj_3R_20()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_27() {
+    if (jj_3R_40()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    if (jj_scan_token(UNDERLINE)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(UNDERLINE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_39() {
+    if (jj_scan_token(H3)) return true;
+    if (jj_3R_14()) return true;
+    if (jj_scan_token(H3)) return true;
+    return false;
   }
 
   /** Generated Token Manager. */
@@ -279,8 +656,10 @@ public class Skaner implements SkanerConstants {
   /** Next token. */
   public Token jj_nt;
   private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
   private int jj_gen;
-  final private int[] jj_la1 = new int[2];
+  final private int[] jj_la1 = new int[4];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
@@ -288,11 +667,14 @@ public class Skaner implements SkanerConstants {
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xffff5e36,0xffff5e36,};
+      jj_la1_0 = new int[] {0xe422fa34,0x400f234,0xc0220000,0x220000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0xfffff,0xfffff,};
+      jj_la1_1 = new int[] {0xaa0e,0xc,0x2a02,0x0,};
    }
+  final private JJCalls[] jj_2_rtns = new JJCalls[4];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
 
   /** Constructor with InputStream. */
   public Skaner(java.io.InputStream stream) {
@@ -305,7 +687,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -319,7 +702,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor. */
@@ -329,7 +713,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -339,7 +724,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Constructor with generated Token Manager. */
@@ -348,7 +734,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   /** Reinitialise. */
@@ -357,7 +744,8 @@ public class Skaner implements SkanerConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 2; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
   private Token jj_consume_token(int kind) throws ParseException {
@@ -367,11 +755,44 @@ public class Skaner implements SkanerConstants {
     jj_ntk = -1;
     if (token.kind == kind) {
       jj_gen++;
+      if (++jj_gc > 100) {
+        jj_gc = 0;
+        for (int i = 0; i < jj_2_rtns.length; i++) {
+          JJCalls c = jj_2_rtns[i];
+          while (c != null) {
+            if (c.gen < jj_gen) c.first = null;
+            c = c.next;
+          }
+        }
+      }
       return token;
     }
     token = oldToken;
     jj_kind = kind;
     throw generateParseException();
+  }
+
+  static private final class LookaheadSuccess extends java.lang.Error { }
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
+    if (jj_scanpos == jj_lastpos) {
+      jj_la--;
+      if (jj_scanpos.next == null) {
+        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+      } else {
+        jj_lastpos = jj_scanpos = jj_scanpos.next;
+      }
+    } else {
+      jj_scanpos = jj_scanpos.next;
+    }
+    if (jj_rescan) {
+      int i = 0; Token tok = token;
+      while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+      if (tok != null) jj_add_error_token(kind, i);
+    }
+    if (jj_scanpos.kind != kind) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+    return false;
   }
 
 
@@ -404,16 +825,43 @@ public class Skaner implements SkanerConstants {
   private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
   private int[] jj_expentry;
   private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
+
+  private void jj_add_error_token(int kind, int pos) {
+    if (pos >= 100) return;
+    if (pos == jj_endpos + 1) {
+      jj_lasttokens[jj_endpos++] = kind;
+    } else if (jj_endpos != 0) {
+      jj_expentry = new int[jj_endpos];
+      for (int i = 0; i < jj_endpos; i++) {
+        jj_expentry[i] = jj_lasttokens[i];
+      }
+      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        int[] oldentry = (int[])(it.next());
+        if (oldentry.length == jj_expentry.length) {
+          for (int i = 0; i < jj_expentry.length; i++) {
+            if (oldentry[i] != jj_expentry[i]) {
+              continue jj_entries_loop;
+            }
+          }
+          jj_expentries.add(jj_expentry);
+          break jj_entries_loop;
+        }
+      }
+      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+    }
+  }
 
   /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[52];
+    boolean[] la1tokens = new boolean[57];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -425,13 +873,16 @@ public class Skaner implements SkanerConstants {
         }
       }
     }
-    for (int i = 0; i < 52; i++) {
+    for (int i = 0; i < 57; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
         jj_expentries.add(jj_expentry);
       }
     }
+    jj_endpos = 0;
+    jj_rescan_token();
+    jj_add_error_token(0, 0);
     int[][] exptokseq = new int[jj_expentries.size()][];
     for (int i = 0; i < jj_expentries.size(); i++) {
       exptokseq[i] = jj_expentries.get(i);
@@ -445,6 +896,44 @@ public class Skaner implements SkanerConstants {
 
   /** Disable tracing. */
   final public void disable_tracing() {
+  }
+
+  private void jj_rescan_token() {
+    jj_rescan = true;
+    for (int i = 0; i < 4; i++) {
+    try {
+      JJCalls p = jj_2_rtns[i];
+      do {
+        if (p.gen > jj_gen) {
+          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+          switch (i) {
+            case 0: jj_3_1(); break;
+            case 1: jj_3_2(); break;
+            case 2: jj_3_3(); break;
+            case 3: jj_3_4(); break;
+          }
+        }
+        p = p.next;
+      } while (p != null);
+      } catch(LookaheadSuccess ls) { }
+    }
+    jj_rescan = false;
+  }
+
+  private void jj_save(int index, int xla) {
+    JJCalls p = jj_2_rtns[index];
+    while (p.gen > jj_gen) {
+      if (p.next == null) { p = p.next = new JJCalls(); break; }
+      p = p.next;
+    }
+    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+  }
+
+  static final class JJCalls {
+    int gen;
+    Token first;
+    int arg;
+    JJCalls next;
   }
 
 }
