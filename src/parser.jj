@@ -147,11 +147,6 @@ TOKEN :
 
 TOKEN :
 {
-  < DIALOG : < ENTER > (">")+ >
-}
-
-TOKEN :
-{
   < DELO : "<del>" >
 | < DELC : "</del>" >
 }
@@ -176,30 +171,32 @@ TOKEN :
 
 TOKEN :
 {
-< QUOTEO : "<<" >
-| < QUOTEC : ">>" >
+	< QUOTE1 : <ENTER> ">" >
+|	< QUOTE2 : <ENTER> ">>" >
+|	< QUOTE3 : <ENTER> ">>>" >
 }
 
 TOKEN :
 {
-  < FILEO : "<file>" >
+  < FILEO : "<file>" >		//załatwione
 | < FILEC : "</file>" >
 }
 
 TOKEN :
 {
-  < NOWIKIO : "<nowiki>" >
+  < NOWIKIO : "<nowiki>" >	//załatwione
 | < NOWIKIC : "</nowiki>" >
 }
 
 TOKEN :
 {
-  < FOOTNOTEO : "((" >
+  < FOOTNOTEO : "((" >		//to nie będzie łatwe do parsowania
 | < FOOTNOTEC : "))" >
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //Odtąd jest definicja parsera
+///////////////////////////////////////////////////////////////////////////////////////////
 String Start() throws NumberFormatException :
 {
     String val="";
@@ -221,6 +218,12 @@ String Start() throws NumberFormatException :
    |
    val=Head5()
 	{wynik += val;}
+   |LOOKAHEAD(2)
+   val=Code()
+	{wynik += val;}
+   |LOOKAHEAD(2)
+   val=File()
+	{wynik += val;}
    |
    val = Zagniezdzalne()
 	{wynik += val;}
@@ -236,15 +239,19 @@ String Zagniezdzalne() throws NumberFormatException :
 }
 {
 (
-	//LOOKAHEAD(Email()) 
+	i = Quote()
+	|
 	i = Email() //Nie mam pojęcia, dlaczego maile się nie rozpoznają, token powinien być prawidłowy a jest <MORETHANLITERA> zamiast EMAIL
 	|
 	i = Bolded()
 	|
-	//LOOKAHEAD(CzystyTekst()) 
+		//LOOKAHEAD(CzystyTekst()) 
 	i = CzystyTekst()
 	|
-	//LOOKAHEAD(Italics()) 
+	<ENTER>
+		{i="";}
+	|
+		//LOOKAHEAD(Italics()) 
 	i = Italics()
 	|
 	i = Underlined()
@@ -252,7 +259,7 @@ String Zagniezdzalne() throws NumberFormatException :
 	i = Monospaced()
 	|
 	<DOUBLE_ENTER>
-	{i="</p>\n<p>";}
+		{i="</p>\n<p>";}
 	|
 	i=NoFormat()
 	|
@@ -266,12 +273,14 @@ String Zagniezdzalne() throws NumberFormatException :
 	|
 	i=Link()
 	|
-   <KRESKA>
-   {i="<hr />";}
-   |
-   <NOWALINIA>
-   {i="<br />";}
-	
+	<KRESKA>
+		{i="<hr />";}
+	|
+	<NOWALINIA>
+		{i="<br />";}
+	|
+	(t=<CODEO> | t=<CODEC> | t=<FILEO> | t=<FILEC>)
+		{i="&lt;"+t.image.substring(1,t.image.length()-1)+"&gt;";}
 	
 )
 
@@ -303,14 +312,14 @@ String Italics():
 	{
 		<ITALICS>
 		{System.out.print("ITALICS ");}
-		{value="<i>";}
+		{value="<em>";}
 		(
 		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
 		{value+=i;}
 		)+
 		<ITALICS>
 		{System.out.print("ITALICS ");}
-		{value+="</i>";}
+		{value+="</em>";}
 		{return value;}
 	}
 String Underlined():
@@ -349,6 +358,7 @@ String Monospaced():
 		{value+="</code>";}
 		{return value;}
 	}
+
 JAVACODE
 String NoFormatBody() {
       Token tok;
@@ -475,6 +485,48 @@ String Head5():
 	{System.out.print("H5 costam Hc ");}
 	{return "<h5>"+i+"</h5>";}
 }
+String Code():
+{
+	String i;
+}
+{
+	(<CODEO> i=CodeFileBody() <CODEC>)
+	{System.out.print("CODEo costam CODEc ");}
+	{return "<pre>"+i+"</pre>";}
+}
+String File():
+{
+	String i;
+}
+{
+	(<FILEO> i=CodeFileBody() <FILEC>)
+	{System.out.print("FILEo costam FILEc ");}
+	{return "<pre>"+i+"</pre>";}
+}
+JAVACODE
+String CodeFileBody() {
+      Token tok;
+	  String i="";
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind == CODEC || tok.kind == FILEC) break;
+		else {i+=tok.image;}
+        tok = getNextToken();
+      }
+	  return i;
+}
+String Quote():
+{
+	String i;
+}
+{
+	(<QUOTE1> i=Zagniezdzalne() <ENTER>)
+		{System.out.print("QUOTE1 ");}
+		{return "<blockquote>"+i+"</blockquote>";}
+	| (<QUOTE2> i=Zagniezdzalne() <ENTER>)
+		{System.out.print("QUOTE2 ");}
+		{return "<blockquote><blockquote>"+i+"</blockquote></blockquote>";}
+}
 String Link():
 {
 	Token t;
@@ -493,7 +545,7 @@ String Link():
 		{System.out.print("LINK3 ");}
 		{return "<a href=\""+t.image+"\" title=\""+t.image+"\">"+i+"</a>";}
 }
-String Email():	//nie wiem czemu nie działa, tak jakby parser nie widział takiego tokenu
+String Email():	//już powinno działać
 {
 	Token t;
 	String i;
@@ -513,6 +565,8 @@ String Slowo():
 		|
 		t= <NUMER>
 		//|
+		//t= <ENTER>
+		//|
 		//t= <MORETHANLITERA>
 		)
 		{return t.image;}
@@ -525,8 +579,8 @@ String CzystyTekst():
 	{
 		(LOOKAHEAD(2)
 		(
-		t=<ENTER>
-		|
+		//t=<ENTER>
+		//|
 		i=Slowo()
 		{value+=i;}
 		|

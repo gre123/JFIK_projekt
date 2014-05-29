@@ -89,27 +89,27 @@ public interface ParserConstants {
   /** RegularExpression Id. */
   int VERT_SPAN = 40;
   /** RegularExpression Id. */
-  int DIALOG = 41;
+  int DELO = 41;
   /** RegularExpression Id. */
-  int DELO = 42;
+  int DELC = 42;
   /** RegularExpression Id. */
-  int DELC = 43;
+  int SUPO = 43;
   /** RegularExpression Id. */
-  int SUPO = 44;
+  int SUPC = 44;
   /** RegularExpression Id. */
-  int SUPC = 45;
+  int SUBO = 45;
   /** RegularExpression Id. */
-  int SUBO = 46;
+  int SUBC = 46;
   /** RegularExpression Id. */
-  int SUBC = 47;
+  int CODEO = 47;
   /** RegularExpression Id. */
-  int CODEO = 48;
+  int CODEC = 48;
   /** RegularExpression Id. */
-  int CODEC = 49;
+  int QUOTE1 = 49;
   /** RegularExpression Id. */
-  int QUOTEO = 50;
+  int QUOTE2 = 50;
   /** RegularExpression Id. */
-  int QUOTEC = 51;
+  int QUOTE3 = 51;
   /** RegularExpression Id. */
   int FILEO = 52;
   /** RegularExpression Id. */
@@ -169,7 +169,6 @@ public interface ParserConstants {
     "\"^\"",
     "\"|\"",
     "\":::\"",
-    "<DIALOG>",
     "\"<del>\"",
     "\"</del>\"",
     "\"<sup>\"",
@@ -178,8 +177,9 @@ public interface ParserConstants {
     "\"</sub>\"",
     "\"<code>\"",
     "\"</code>\"",
-    "\"<<\"",
-    "\">>\"",
+    "<QUOTE1>",
+    "<QUOTE2>",
+    "<QUOTE3>",
     "\"<file>\"",
     "\"</file>\"",
     "\"<nowiki>\"",
