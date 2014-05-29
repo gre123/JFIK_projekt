@@ -1,0 +1,539 @@
+/* na pewno zadziała, przecież nie jestem debilem */
+
+options {
+  STATIC = false;
+  IGNORE_CASE = true;
+  //LOOKAHEAD=2;
+  //UNICODE_INPUT = true;
+  //JAVA_UNICODE_ESCAPE = false;
+
+}
+
+PARSER_BEGIN(Parser)
+
+public class Parser {
+  public static final String nl = System.getProperty("line.separator");
+  public static void main(String args[]) 
+    throws ParseException, TokenMgrError {
+    Parser interpreter = new Parser(System.in);
+
+    System.out.println("Napisz, co mam przeskanowac?");
+
+    String result = interpreter.Start();
+    System.out.println ("Start returns: " + result);
+   
+  }
+
+}
+
+PARSER_END(Parser)
+
+TOKEN :
+{
+  < NUMER : (< CYFRA >)+ >
+| < WORD: (< ALNUM > | < OGONEK >)+ | "\\\\" (< ALNUM > | < OGONEK >)+ >
+| < #ALNUM :
+      < CYFRA >
+    | < LITERA >
+	//| < MORETHANLITERA >	//może powodować problemy
+  >
+| < ENTER :
+    "\r"
+  | "\n"
+  | "\r\n" >
+| < NOWALINIA : "\\\\" >
+| < #CYFRA : [ "0"-"9" ] >
+| < #LITERA : [ "a"-"z", "A"-"Z" ] >
+/*| < #OGONEK : "\u0104" | "\u0105"
+    | "\u0106" | "\u0107"
+    | "\u0118" | "\u0119"
+    | "\u0141" | "\u0142"
+    | "\u0143" | "\u0144"
+    | "\u00d3" | "\u00f3"
+    | "\u015a" | "\u015b"
+    | "\u0179" | "\u017a"
+    | "\u017b" | "\u017c" >*/
+	
+| < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
+	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
+	| "\u2026" | "\u015f" | "\u201e"	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+	|"\u0104" | "\u0105"
+    | "\u0106" | "\u0107"
+    | "\u0118" | "\u0119"
+    | "\u0141" | "\u0142"
+    | "\u0143" | "\u0144"
+    | "\u00d3" | "\u00f3"
+    | "\u015a" | "\u015b"
+    | "\u0179" | "\u017a"
+    | "\u017b" | "\u017c">
+| < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
+| ";" | ":" | "'" | "\"" | "\\" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
+}
+
+TOKEN :
+{
+  < KRESKA : "---" ("-")+ (<SPACE>)* < ENTER >>
+| < H1 : "======" ("=")* >
+| < H2 : "=====" >
+| < H3 : "====" >
+| < H4 : "===" >
+| < H5 : "==" >
+| < HC : "==" ("=")* <ENTER>>
+}
+
+TOKEN :
+{
+  < URL :
+    ("www." | "http://")
+    < DOMENA >
+    ( ("/" < WORD >)* "." < WORD > )? >
+| < #DOMENA : ((< ALNUM >)+ ".")+ < WORD >>
+| < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">	//email nie jest rozpoznawany sam z siebie, ale ze znacznikami <> powinien być
+| < #EMAIL_NAZWA : ((< ALNUM >)+ ".")* (< ALNUM >)+>	//prawie jak domena, ale nie całkiem
+}
+
+TOKEN :
+{
+  < LINKO : "[[" >	//są też linki bez znaczników i linki z opisem, wypada dopracować
+| < LINKC : "]]" >
+}
+
+TOKEN :
+{
+  < OBRO : "{{" >
+| < OBRC : "}}" >
+}
+
+TOKEN :
+{
+  < WYMIARY : "?" < NUMER > "x" < NUMER >>	//razem z pytajnikiem
+  
+| < DOUBLE_SPACE : "  " >
+| < DOUBLE_ENTER : <ENTER> <ENTER> >
+| < LISTAN : < DOUBLE_SPACE > "*" >
+| < LISTAP : < DOUBLE_SPACE > "-" >
+
+| < BOLD : "**" >
+| < ITALICS : "//" >
+| < UNDERLINE : "__" >
+| < NO_FORMAT : "%%" >
+| < MONO : "''" >
+| < SPACE : " " >
+}
+//SKIP:{" "}
+
+TOKEN :
+{
+  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
+	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
+	| ":-X" | ":-|" | ";-)" | "^_^"
+	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
+}
+
+
+TOKEN :
+{
+  < SYMBOL : "->" | "<-" | "<->" | "=>" | "<=" | "<=>" 
+	| "--" | "---"
+	| "(c)" | "(tm)" | "(r)" >
+}
+
+TOKEN :
+{
+  < HEADER : "^" >
+| < KOLUMNA : "|" >
+| < VERT_SPAN : ":::" >
+}
+
+TOKEN :
+{
+  < DIALOG : < ENTER > (">")+ >
+}
+
+TOKEN :
+{
+  < DELO : "<del>" >
+| < DELC : "</del>" >
+}
+
+TOKEN :
+{
+  < SUPO : "<sup>" >
+| < SUPC : "</sup>" >
+}
+
+TOKEN :
+{
+  < SUBO : "<sub>" >
+| < SUBC : "</sub>" >
+}
+
+TOKEN :
+{
+  < CODEO : "<code>" >
+| < CODEC : "</code>" >
+}
+
+TOKEN :
+{
+< QUOTEO : "<<" >
+| < QUOTEC : ">>" >
+}
+
+TOKEN :
+{
+  < FILEO : "<file>" >
+| < FILEC : "</file>" >
+}
+
+TOKEN :
+{
+  < NOWIKIO : "<nowiki>" >
+| < NOWIKIC : "</nowiki>" >
+}
+
+TOKEN :
+{
+  < FOOTNOTEO : "((" >
+| < FOOTNOTEC : "))" >
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+//Odtąd jest definicja parsera
+String Start() throws NumberFormatException :
+{
+    String val="";
+    String wynik="";
+}
+{
+ (
+   val=Head1()
+	{wynik += val;}
+   |
+   val=Head2()
+	{wynik += val;}
+   |
+   val=Head3()
+	{wynik += val;}
+   |
+   val=Head4()
+	{wynik += val;}
+   |
+   val=Head5()
+	{wynik += val;}
+   |
+   val = Zagniezdzalne()
+	{wynik += val;}
+ )*
+ <EOF>
+ {return wynik; }
+}
+
+String Zagniezdzalne() throws NumberFormatException :
+{
+   Token t;
+   String i;
+}
+{
+(
+	//LOOKAHEAD(Email()) 
+	i = Email() //Nie mam pojęcia, dlaczego maile się nie rozpoznają, token powinien być prawidłowy a jest <MORETHANLITERA> zamiast EMAIL
+	|
+	i = Bolded()
+	|
+	//LOOKAHEAD(CzystyTekst()) 
+	i = CzystyTekst()
+	|
+	//LOOKAHEAD(Italics()) 
+	i = Italics()
+	|
+	i = Underlined()
+	|
+	i = Monospaced()
+	|
+	<DOUBLE_ENTER>
+	{i="</p>\n<p>";}
+	|
+	i=NoFormat()
+	|
+	i=NoWiki()
+	|
+	i=Sub()
+	|
+	i=Sup()
+	|
+	i=Del()
+	|
+	i=Link()
+	|
+   <KRESKA>
+   {i="<hr />";}
+   |
+   <NOWALINIA>
+   {i="<br />";}
+	
+	
+)
+
+ {return i;}
+}
+String Bolded():
+	{
+		String i;
+		String value;
+	}
+	{
+		<BOLD>
+		{System.out.print("BOLD ");}
+		{value="<strong>";}
+		(
+		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
+		{value+=i;}
+		)+
+		<BOLD>
+		{System.out.print("BOLD ");}
+		{value+="</strong>";}
+		{return value;}
+	}
+String Italics():
+	{
+		String i;
+		String value;
+	}
+	{
+		<ITALICS>
+		{System.out.print("ITALICS ");}
+		{value="<i>";}
+		(
+		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
+		{value+=i;}
+		)+
+		<ITALICS>
+		{System.out.print("ITALICS ");}
+		{value+="</i>";}
+		{return value;}
+	}
+String Underlined():
+	{
+		String i;
+		String value;
+	}
+	{
+		<UNDERLINE>
+		{System.out.print("UNDERLINE ");}
+		{value="<u>";}
+		(
+		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
+		{value+=i;}
+		)+
+		<UNDERLINE>
+		{System.out.print("UNDERLINE ");}
+		{value+="</u>";}
+		{return value;}
+	}
+String Monospaced():
+	{
+		String i;
+		String value;
+	}
+	{
+		<MONO>
+		{System.out.print("MONO ");}
+		{value="<code>";}
+		(
+		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
+		{value+=i;}
+		)+
+		<MONO>
+		{System.out.print("MONO ");}
+		{value+="</code>";}
+		{return value;}
+	}
+JAVACODE
+String NoFormatBody() {
+      Token tok;
+	  String i="";
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind == NO_FORMAT) break;
+		else {i+=tok.image;}
+        tok = getNextToken();
+      }
+	  return i;
+}
+JAVACODE
+String NoWikiBody() {
+      Token tok;
+	  String i="";
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind == NOWIKIC) break;
+		else {i+=tok.image;}
+        tok = getNextToken();
+      }
+	  return i;
+}
+
+String NoFormat():
+	{String i;}
+	{
+	<NO_FORMAT> i=NoFormatBody() <NO_FORMAT>
+	{System.out.print("NO_FORMAT costam NO_FORMAT ");}
+	{return i;}
+	}
+String NoWiki():
+	{String i;}
+	{
+	<NOWIKIO> i=NoWikiBody() <NOWIKIC>
+	{System.out.print("NOWIKIo costam NOWIKIc ");}
+	{return i;}
+	}
+String Sub():
+	{String i;}
+	{
+	<SUBO> 
+	{System.out.print("SUBo");}
+	i=Zagniezdzalne() 
+	<SUBC>
+	{System.out.print("SUBc");}
+	{return "<sub>"+i+"</sub>";}
+	}
+String Sup():
+	{String i;}
+	{
+	<SUPO> 
+	{System.out.print("SUBo");}
+	i=Zagniezdzalne() 
+	<SUPC>
+	{System.out.print("SUBc");}
+	{return "<sup>"+i+"</sup>";}
+	}
+String Del():
+	{String i;}
+	{
+	<DELO> 
+	{System.out.print("DELo");}
+	i=Zagniezdzalne() 
+	<DELC>
+	{System.out.print("DELc");}
+	{return "<del>"+i+"</del>";}
+	}
+JAVACODE
+String HeadBody() {
+      Token tok;
+	  String i="";
+      while (true) {
+        tok = getToken(1);
+        if (tok.kind == HC) break;
+		else {i+=tok.image;}
+        tok = getNextToken();
+      }
+	  return i;
+}
+String Head1():
+{
+	String i;
+}
+{
+	(<H1> i=HeadBody() <HC>)
+	{System.out.print("H1 costam Hc ");}
+	{return "<h1>"+i+"</h1>";}
+}
+String Head2():
+{
+	String i;
+}
+{
+	(<H2> i=HeadBody() <HC>)
+	{System.out.print("H2 costam Hc ");}
+	{return "<h2>"+i+"</h2>";}
+}
+String Head3():
+{
+	String i;
+}
+{
+	(<H3> i=HeadBody() <HC>)
+	{System.out.print("H3 costam Hc ");}
+	{return "<h3>"+i+"</h3>";}
+}
+String Head4():
+{
+	String i;
+}
+{
+	(<H4> i=HeadBody() <HC>)
+	{System.out.print("H4 costam Hc ");}
+	{return "<h4>"+i+"</h4>";}
+}
+String Head5():
+{
+	String i;
+}
+{
+	(<H5> i=HeadBody() <HC>)
+	{System.out.print("H5 costam Hc ");}
+	{return "<h5>"+i+"</h5>";}
+}
+String Link():
+{
+	Token t;
+	String i;
+}
+{
+	t=<URL> 
+		{System.out.print("LINK ");}
+		{return "<a href="+t.image+">"+t.image+"</a>";}
+	| LOOKAHEAD(3)
+	<LINKO> t=<URL> <LINKC>	//to powinien być też link wewnętrzny do sekcji, ale nie wiem skąd wziąć aktualny adres strony
+		{System.out.print("LINK2 ");}
+		{return "<a href="+t.image+">"+t.image+"</a>";}
+	|
+	<LINKO> (<SPACE>)* t=<URL> (<SPACE>)* <KOLUMNA> i=CzystyTekst() <LINKC>
+		{System.out.print("LINK3 ");}
+		{return "<a href=\""+t.image+"\" title=\""+t.image+"\">"+i+"</a>";}
+}
+String Email():	//nie wiem czemu nie działa, tak jakby parser nie widział takiego tokenu
+{
+	Token t;
+	String i;
+}
+{
+	t=<EMAIL>
+		{i=t.image.substring(1,t.image.length()-1);}
+		{System.out.print("EMAIL ");}
+		{return "<a href=\"mailto:"+i+"\""+" title=\""+i+"\">"+i+"</a>";}
+}
+	
+String Slowo():
+	{Token t;}
+	{
+		(
+		t= <WORD>
+		|
+		t= <NUMER>
+		//|
+		//t= <MORETHANLITERA>
+		)
+		{return t.image;}
+	}
+String CzystyTekst():
+	{	Token t;
+		String value="";
+		String i="";
+	}
+	{
+		(LOOKAHEAD(2)
+		(
+		t=<ENTER>
+		|
+		i=Slowo()
+		{value+=i;}
+		|
+		t=<SPACE>
+		{value+=" ";}
+		)
+		)+
+		{System.out.print("CzystyTekst ");}
+		{return value;}
+	}

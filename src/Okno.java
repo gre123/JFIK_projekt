@@ -1,7 +1,3 @@
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,13 +8,12 @@ import java.util.logging.Logger;
  *
  * @author epifaniusz
  */
-public class Gui extends javax.swing.JFrame {
-    Skaner sk=null;
-
+public class Okno extends javax.swing.JFrame {
+    Parser sk=null;
     /**
-     * Creates new form Gui
+     * Creates new form Okno
      */
-    public Gui() {
+    public Okno() {
         initComponents();
     }
 
@@ -31,27 +26,23 @@ public class Gui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextAreaOut = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaIn = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaOut = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Skaner DokuWiki GB TG EW");
-
-        jTextAreaOut.setEditable(false);
-        jTextAreaOut.setColumns(20);
-        jTextAreaOut.setLineWrap(true);
-        jTextAreaOut.setRows(5);
-        jScrollPane2.setViewportView(jTextAreaOut);
 
         jTextAreaIn.setColumns(20);
-        jTextAreaIn.setLineWrap(true);
         jTextAreaIn.setRows(5);
         jScrollPane1.setViewportView(jTextAreaIn);
 
-        jButton1.setText("Skanuj");
+        jTextAreaOut.setColumns(20);
+        jTextAreaOut.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaOut);
+
+        jButton1.setText("Parsuj");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -62,26 +53,18 @@ public class Gui extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -90,19 +73,18 @@ public class Gui extends javax.swing.JFrame {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
     java.io.StringReader sr = new java.io.StringReader(jTextAreaIn.getText());
     System.out.println("Zaczynam skanowanie");
-    sk = new Skaner(sr);
+    sk = new Parser(sr);
     sk.enable_tracing();
-    String result=null;
+    String result="<p>";
         try {
-            result = sk.Start();
+            result += sk.Start();
         } catch (ParseException ex) {
             jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
             System.out.println(ex.currentToken.image+"  "+ex.getMessage());
             
           //  Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NumberFormatException ex) {
-        //    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         }
+    result += "</p>";
 //    
         
      //System.out.println( sk.token.);
@@ -111,7 +93,7 @@ public class Gui extends javax.swing.JFrame {
     }else{
         jTextAreaOut.setText(result);
     }
-    System.out.println ("Skonczylem");
+    System.out.println ("\nSkonczylem");                                     
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
@@ -131,20 +113,20 @@ public class Gui extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Okno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Okno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Okno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Okno.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Gui().setVisible(true);
+                new Okno().setVisible(true);
             }
         });
     }
