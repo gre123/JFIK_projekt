@@ -30,6 +30,14 @@ PARSER_END(Parser)
 
 TOKEN :
 {
+  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
+	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
+	| ":-X" | ":-|" | ";-)" | "^_^"
+	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
+}
+
+TOKEN :
+{
   < NUMER : (< CYFRA >)+ >
 | < WORD: (< ALNUM > | < OGONEK >)+ | "\\\\" (< ALNUM > | < OGONEK >)+ >
 | < #ALNUM :
@@ -86,8 +94,8 @@ TOKEN :
   < URL :
     ("www." | "http://")
     < DOMENA >
-    ( ("/" < WORD >)* "." < WORD > )? >
-| < #DOMENA : ((< ALNUM >)+ ".")+ < WORD >>
+    ( "/" (< WORD >)* ("." < WORD >)* )* >
+| < DOMENA : ((< ALNUM >)+ ".")+ < WORD >>
 | < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">	//email nie jest rozpoznawany sam z siebie, ale ze znacznikami <> powinien być
 | < #EMAIL_NAZWA : ((< ALNUM >)+ ".")* (< ALNUM >)+>	//prawie jak domena, ale nie całkiem
 }
@@ -112,6 +120,9 @@ TOKEN :
 | < DOUBLE_ENTER : <ENTER> <ENTER> >
 | < LISTAN : < DOUBLE_SPACE > "*" >
 | < LISTAP : < DOUBLE_SPACE > "-" >
+//| < LISTANWIERSZ : < LISTAN > (<WORD>)* <ENTER>  >
+//| < WIERSZKILKAN : (<WIERSZN>)*  >
+
 
 | < BOLD : "**" >
 | < ITALICS : "//" >
@@ -122,13 +133,7 @@ TOKEN :
 }
 //SKIP:{" "}
 
-TOKEN :
-{
-  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
-	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
-	| ":-X" | ":-|" | ";-)" | "^_^"
-	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
-}
+
 
 
 TOKEN :
@@ -201,6 +206,7 @@ String Start() throws NumberFormatException :
 {
     String val="";
     String wynik="";
+	Token t;
 }
 {
  (
@@ -225,6 +231,24 @@ String Start() throws NumberFormatException :
    val=File()
 	{wynik += val;}
    |
+   val=Obrazek()
+	{wynik += val;}
+	|	
+   val=Emot()
+	{wynik += val;}
+   |	
+   <DOUBLE_SPACE>
+    {wynik+="&nbsp&nbsp";}
+    |
+     val=ListaP()
+    {wynik += val;}
+     |
+     val=ListaN()
+    {wynik += val;}
+   |
+   val=Symbol()
+    {wynik += val;}
+     |
    val = Zagniezdzalne()
 	{wynik += val;}
  )*
@@ -239,6 +263,8 @@ String Zagniezdzalne() throws NumberFormatException :
 }
 {
 (
+	i=Footnotes()
+	|
 	i = Quote()
 	|
 	i = Email() //Nie mam pojęcia, dlaczego maile się nie rozpoznają, token powinien być prawidłowy a jest <MORETHANLITERA> zamiast EMAIL
@@ -274,16 +300,14 @@ String Zagniezdzalne() throws NumberFormatException :
 	i=Link()
 	|
 	<KRESKA>
-		{i="<hr />";}
+		{i="<hr>";}
 	|
 	<NOWALINIA>
-		{i="<br />";}
+		{i="<br>";}
 	|
 	(t=<CODEO> | t=<CODEC> | t=<FILEO> | t=<FILEC>)
-		{i="&lt;"+t.image.substring(1,t.image.length()-1)+"&gt;";}
-	
+		{i="&lt;"+t.image.substring(1,t.image.length()-1)+"&gt;";}	
 )
-
  {return i;}
 }
 String Bolded():
@@ -304,6 +328,7 @@ String Bolded():
 		{value+="</strong>";}
 		{return value;}
 	}
+	
 String Italics():
 	{
 		String i;
@@ -322,6 +347,7 @@ String Italics():
 		{value+="</em>";}
 		{return value;}
 	}
+	
 String Underlined():
 	{
 		String i;
@@ -340,6 +366,7 @@ String Underlined():
 		{value+="</u>";}
 		{return value;}
 	}
+	
 String Monospaced():
 	{
 		String i;
@@ -371,6 +398,7 @@ String NoFormatBody() {
       }
 	  return i;
 }
+
 JAVACODE
 String NoWikiBody() {
       Token tok;
@@ -391,6 +419,7 @@ String NoFormat():
 	{System.out.print("NO_FORMAT costam NO_FORMAT ");}
 	{return i;}
 	}
+	
 String NoWiki():
 	{String i;}
 	{
@@ -398,6 +427,7 @@ String NoWiki():
 	{System.out.print("NOWIKIo costam NOWIKIc ");}
 	{return i;}
 	}
+	
 String Sub():
 	{String i;}
 	{
@@ -408,6 +438,7 @@ String Sub():
 	{System.out.print("SUBc");}
 	{return "<sub>"+i+"</sub>";}
 	}
+	
 String Sup():
 	{String i;}
 	{
@@ -428,6 +459,7 @@ String Del():
 	{System.out.print("DELc");}
 	{return "<del>"+i+"</del>";}
 	}
+	
 JAVACODE
 String HeadBody() {
       Token tok;
@@ -440,6 +472,7 @@ String HeadBody() {
       }
 	  return i;
 }
+
 String Head1():
 {
 	String i;
@@ -449,6 +482,7 @@ String Head1():
 	{System.out.print("H1 costam Hc ");}
 	{return "<h1>"+i+"</h1>";}
 }
+
 String Head2():
 {
 	String i;
@@ -458,6 +492,7 @@ String Head2():
 	{System.out.print("H2 costam Hc ");}
 	{return "<h2>"+i+"</h2>";}
 }
+
 String Head3():
 {
 	String i;
@@ -467,6 +502,7 @@ String Head3():
 	{System.out.print("H3 costam Hc ");}
 	{return "<h3>"+i+"</h3>";}
 }
+
 String Head4():
 {
 	String i;
@@ -476,6 +512,7 @@ String Head4():
 	{System.out.print("H4 costam Hc ");}
 	{return "<h4>"+i+"</h4>";}
 }
+
 String Head5():
 {
 	String i;
@@ -485,6 +522,7 @@ String Head5():
 	{System.out.print("H5 costam Hc ");}
 	{return "<h5>"+i+"</h5>";}
 }
+
 String Code():
 {
 	String i;
@@ -494,6 +532,7 @@ String Code():
 	{System.out.print("CODEo costam CODEc ");}
 	{return "<pre>"+i+"</pre>";}
 }
+
 String File():
 {
 	String i;
@@ -503,6 +542,7 @@ String File():
 	{System.out.print("FILEo costam FILEc ");}
 	{return "<pre>"+i+"</pre>";}
 }
+
 JAVACODE
 String CodeFileBody() {
       Token tok;
@@ -515,36 +555,170 @@ String CodeFileBody() {
       }
 	  return i;
 }
+
 String Quote():
 {
 	String i;
 }
 {
-	(<QUOTE1> i=Zagniezdzalne() <ENTER>)
+	(<QUOTE1> i=Zagniezdzalne() <ENTER> )
 		{System.out.print("QUOTE1 ");}
 		{return "<blockquote>"+i+"</blockquote>";}
 	| (<QUOTE2> i=Zagniezdzalne() <ENTER>)
 		{System.out.print("QUOTE2 ");}
 		{return "<blockquote><blockquote>"+i+"</blockquote></blockquote>";}
+	| (<QUOTE3> i=Zagniezdzalne() <ENTER>)
+		{System.out.print("QUOTE3 ");}
+		{return "<blockquote><blockquote><blockquote>"+i+"</blockquote></blockquote></blockquote>";}
+	
 }
+
+
+String ListaN():
+{
+	String i="";
+	Token t;
+}
+{
+	(<LISTAN> (LOOKAHEAD(2) (<SPACE>) | " ")*  i=Zagniezdzalne() (<ENTER>|<DOUBLE_ENTER>))
+	{System.out.print("Lista N wiersz ");}
+	{return "<li>"+i+"</li>";}
+}
+
+String ListaP():
+{
+	String i="";
+	Token t;
+}
+{
+	(<LISTAP> (LOOKAHEAD(2) (<SPACE>) | " ")*  i=Zagniezdzalne() (<ENTER>|<DOUBLE_ENTER>))
+	{System.out.print("Lista N wiersz ");}
+	{return "<li>"+i+"</li>";}
+}
+
+
+String Symbol():
+{
+	String i="";
+	Token t;
+}
+{
+	(t=<SYMBOL>)
+	{System.out.print("SYMBOL");}
+	{if(t.image.equals("->")){System.out.print(t.image);return "→";}
+	if(t.image.equals("<-")){System.out.print(t.image);return "←";}
+	if(t.image.equals("<->")){System.out.print(t.image);return "↔";}
+	if(t.image.equals("=>")){System.out.print(t.image);return "⇒";}
+	if(t.image.equals("<=")){System.out.print(t.image);return "⇐";}
+	if(t.image.equals("<=>")){System.out.print(t.image);return "⇔";}
+	if(t.image.equals(">>")){System.out.print(t.image);return "»";}
+	if(t.image.equals("<<")){System.out.print(t.image);return "«";}
+	if(t.image.equals("--")){System.out.print(t.image);return "–";}
+	if(t.image.equals("---")){System.out.print(t.image);return "—";}
+	if(t.image.equals("(c)")){System.out.print(t.image);return "©";}
+	if(t.image.equals("(tm)")){System.out.print(t.image);return "™";}
+	if(t.image.equals("(r)")){System.out.print(t.image);return "®";}
+	 return "" ;
+	}
+	  
+}
+
+String Emot():
+{
+	String i="";
+	Token t;
+}
+{
+	(t=<EMOTKA>)
+	{System.out.print("EMOT");}
+	{if(t.image.equals("8-)")){System.out.print(t.image);return "<img src=\"1.gif\" alt="+t.image+" />";}
+	 if(t.image.equals("8-O")){System.out.print(t.image);return "<img src=\"2.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-(")){System.out.print(t.image);return "<img src=\"3.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-)")){System.out.print(t.image);return "<img src=\"4.gif\" alt="+t.image+" />";}
+	 if(t.image.equals("=)")){System.out.print(t.image);return "<img src=\"5.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-/")){System.out.print(t.image);return "<img src=\"6.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-\\")){System.out.print(t.image);return "<img src=\"7.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-?")){System.out.print(t.image);return "<img src=\"8.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-D")){System.out.print(t.image);return "<img src=\"9.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-P")){System.out.print(t.image);return "<img src=\"10.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-O")){System.out.print(t.image);return "<img src=\"11.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-X")){System.out.print(t.image);return "<img src=\"12.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":-|")){System.out.print(t.image);return "<img src=\"13.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(";-)")){System.out.print(t.image);return "<img src=\"14.gif\" alt="+t.image+" />";}
+	 if(t.image.equals("^_^")){System.out.print(t.image);return "<img src=\"15.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":?:")){System.out.print(t.image);return "<img src=\"16.gif\" alt="+t.image+" />";}
+	 if(t.image.equals(":!:")){System.out.print(t.image);return "<img src=\"17.gif\" alt="+t.image+" />";}
+	 if(t.image.equals("LOL")){System.out.print(t.image);return "<img src=\"18.gif\" alt="+t.image+" />";} 
+	 if(t.image.equals("FIXME")){System.out.print(t.image);return "<img src=\"19.gif\" alt="+t.image+" />";}
+	 if(t.image.equals("DELETEME")){System.out.print(t.image);return "<img src=\"20.gif\" alt="+t.image+" />";}
+	 return "" ;
+	}
+	  
+}
+
+String Footnotes()://to jest bezsensu bo trzeb jeszcze skrypttty zrobic
+{
+	String i;
+}
+{
+	(<FOOTNOTEO> i=CzystyTekst() <FOOTNOTEC>)
+		{System.out.print("Footnotes ");}
+		{return "<div id=\"insitu__fn\" class=\"insitu-footnote JSpopup\" aria-hidden=\"true\" role=\"tooltip\" style=\"top: 3203.109375px; left: 202px; display: none;\">"+i+"</div>";}
+	
+}
+String Obrazek():
+{
+	String i="";
+	Token t=null;
+	String wynik="";
+}
+{
+	(<OBRO> (LOOKAHEAD(3)  t=<URL> | t=<DOMENA> | i=CzystyTekst() )  <OBRC>)
+		{System.out.print("Obrazek ");
+		if(i==""){
+		i=t.image;
+		}
+		}
+		{wynik+= "<img src="+i+" />";}
+		
+	{return wynik;}	
+	
+}
+
+
 String Link():
 {
-	Token t;
-	String i;
+	Token tl=null;
+	Token t=null;
+	String i="";
+    String l="";
 }
 {
 	t=<URL> 
 		{System.out.print("LINK ");}
 		{return "<a href="+t.image+">"+t.image+"</a>";}
 	| LOOKAHEAD(3)
-	<LINKO> t=<URL> <LINKC>	//to powinien być też link wewnętrzny do sekcji, ale nie wiem skąd wziąć aktualny adres strony
-		{System.out.print("LINK2 ");}
-		{return "<a href="+t.image+">"+t.image+"</a>";}
+	<LINKO> (LOOKAHEAD(3) tl=<URL> | tl =<DOMENA>  | l=CzystyTekst()  ) <LINKC>	//to powinien być też link wewnętrzny do sekcji, ale nie wiem skąd wziąć aktualny adres strony
+		{System.out.print("LINK2 ");
+		if (l==""){
+		l=tl.image;
+		}
+		}
+		{return "<a href="+l+">"+l+"</a>";}
 	|
-	<LINKO> (<SPACE>)* t=<URL> (<SPACE>)* <KOLUMNA> i=CzystyTekst() <LINKC>
-		{System.out.print("LINK3 ");}
-		{return "<a href=\""+t.image+"\" title=\""+t.image+"\">"+i+"</a>";}
+	<LINKO> (<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(2) t=<URL> | i=CzystyTekst()) <LINKC>
+		{System.out.print("LINK3 ");
+		if (l==""){
+		l=tl.image;
+		}
+		if (i==""){
+		i=t.image;
+		}
+		}
+		{return "<a href=\""+l+"\" title=\""+l+"\">"+i+"</a>";}
+
 }
+
 String Email():	//już powinno działać
 {
 	Token t;
@@ -571,6 +745,7 @@ String Slowo():
 		)
 		{return t.image;}
 	}
+	
 String CzystyTekst():
 	{	Token t;
 		String value="";
@@ -583,6 +758,11 @@ String CzystyTekst():
 		//|
 		i=Slowo()
 		{value+=i;}
+		|
+		t = <MORETHANLITERA>
+		{ 
+		value +=t.image; 
+		}
 		|
 		t=<SPACE>
 		{value+=" ";}
