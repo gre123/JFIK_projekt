@@ -237,9 +237,9 @@ String Start() throws NumberFormatException :
    val=Emot()
 	{wynik += val;}
    |
-   //<DOUBLE_SPACE>
-   // {wynik+="&nbsp&nbsp";}
-   //|
+   <DOUBLE_SPACE>
+    {wynik+="&nbsp&nbsp";}
+   |
      val=ListaU()
     {wynik += val;}
    //  |
@@ -278,8 +278,8 @@ String Zagniezdzalne() throws NumberFormatException :
 	i = CzystyTekst()
 	|
 	<ENTER>
-		{i="";}
-		{System.out.print("ENTER ");}
+	{i="";}
+	{System.out.print("ENTER ");}
 	|
 		//LOOKAHEAD(Italics()) 
 	i = Italics()
@@ -723,19 +723,19 @@ String Symbol():
 {
 	(t=<SYMBOL>)
 	{System.out.print("SYMBOL");}
-	{if(t.image.equals("->")){System.out.print(t.image);return "→";}
-	if(t.image.equals("<-")){System.out.print(t.image);return "←";}
-	if(t.image.equals("<->")){System.out.print(t.image);return "↔";}
-	if(t.image.equals("=>")){System.out.print(t.image);return "⇒";}
-	if(t.image.equals("<=")){System.out.print(t.image);return "⇐";}
-	if(t.image.equals("<=>")){System.out.print(t.image);return "⇔";}
-	if(t.image.equals(">>")){System.out.print(t.image);return "»";}
-	if(t.image.equals("<<")){System.out.print(t.image);return "«";}
-	if(t.image.equals("--")){System.out.print(t.image);return "–";}
-	if(t.image.equals("---")){System.out.print(t.image);return "—";}
-	if(t.image.equals("(c)")){System.out.print(t.image);return "©";}
-	if(t.image.equals("(tm)")){System.out.print(t.image);return "™";}
-	if(t.image.equals("(r)")){System.out.print(t.image);return "®";}
+	{if(t.image.equals("->")){System.out.print(t.image);return "&#8592";}
+	if(t.image.equals("<-")){System.out.print(t.image);return "&#8594;";}
+	if(t.image.equals("<->")){System.out.print(t.image);return "&#8596";}
+	if(t.image.equals("=>")){System.out.print(t.image);return "&#8658";}
+	if(t.image.equals("<=")){System.out.print(t.image);return "&#8656";}
+	if(t.image.equals("<=>")){System.out.print(t.image);return "&#8660";}
+	if(t.image.equals(">>")){System.out.print(t.image);return "&#187";}
+	if(t.image.equals("<<")){System.out.print(t.image);return "&#171";}
+	if(t.image.equals("--")){System.out.print(t.image);return "&#8211";}
+	if(t.image.equals("---")){System.out.print(t.image);return "&#8212";}
+	if(t.image.equals("(c)")){System.out.print(t.image);return "&#169";}
+	if(t.image.equals("(tm)")){System.out.print(t.image);return "&#8482";}
+	if(t.image.equals("(r)")){System.out.print(t.image);return "&#174";}
 	 return "" ;
 	}
 	  
@@ -791,6 +791,7 @@ String Obrazek():
 	String wynik="";
 }
 {
+	
 	(<OBRO> (LOOKAHEAD(3)  t=<URL> | t=<DOMENA> | i=CzystyTekst() )  <OBRC>)
 		{System.out.print("Obrazek ");
 		if(i==""){
@@ -798,7 +799,7 @@ String Obrazek():
 		}
 		}
 		{wynik+= "<img src="+i+" />";}
-		
+
 	{return wynik;}	
 	
 }
@@ -824,7 +825,7 @@ String Link():
 		}
 		{return "<a href="+l+">"+l+"</a>";}
 	|LOOKAHEAD(4)
-	<LINKO> (LOOKAHEAD(4)<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(2) t=<URL> | i=CzystyTekst()) <LINKC>
+	<LINKO> (LOOKAHEAD(4)<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(3) t=<URL> | t =<DOMENA> |i=CzystyTekst()) <LINKC>
 		{System.out.print("LINK3 ");
 		if (l==""){
 		l=tl.image;

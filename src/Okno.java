@@ -26,6 +26,7 @@ public class Okno extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("DokuWiki to HTML");
 
         jTextAreaIn.setColumns(20);
         jTextAreaIn.setRows(5);
@@ -74,15 +75,10 @@ public class Okno extends javax.swing.JFrame {
         } catch (ParseException ex) {
             jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
             System.out.println(ex.currentToken.image+"  "+ex.getMessage());
-            
-          //  Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
         }
     result += "</p>";
-//    
-        
-     //System.out.println( sk.token.);
+
     if (result==null){
-    //jTextAreaOut.setText("coś poszło nie tak");
     }else{
         jTextAreaOut.setText(result);
     }
