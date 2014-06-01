@@ -246,6 +246,9 @@ String Start() throws NumberFormatException :
      val=ListaN()
     {wynik += val;}
    |
+   	val = Quote()
+	{wynik += val;}
+	|
    val=Symbol()
     {wynik += val;}
      |
@@ -265,9 +268,9 @@ String Zagniezdzalne() throws NumberFormatException :
 (
 	i=Footnotes()
 	|
-	i = Quote()
-	|
-	i = Email() //Nie mam pojęcia, dlaczego maile się nie rozpoznają, token powinien być prawidłowy a jest <MORETHANLITERA> zamiast EMAIL
+	//i = Quote()
+	//|
+	i = Email()
 	|
 	i = Bolded()
 	|
@@ -276,6 +279,7 @@ String Zagniezdzalne() throws NumberFormatException :
 	|
 	<ENTER>
 		{i="";}
+		{System.out.print("ENTER ");}
 	|
 		//LOOKAHEAD(Italics()) 
 	i = Italics()
@@ -286,6 +290,7 @@ String Zagniezdzalne() throws NumberFormatException :
 	|
 	<DOUBLE_ENTER>
 		{i="</p>\n<p>";}
+		{System.out.print("DOUBLE_ENTER ");}
 	|
 	i=NoFormat()
 	|
@@ -304,6 +309,44 @@ String Zagniezdzalne() throws NumberFormatException :
 	|
 	<NOWALINIA>
 		{i="<br>";}
+	|
+	(t=<CODEO> | t=<CODEC> | t=<FILEO> | t=<FILEC>)
+		{i="&lt;"+t.image.substring(1,t.image.length()-1)+"&gt;";}	
+)
+ {return i;}
+}
+String Zagniezdzalne2() throws NumberFormatException : //do rzeczy zagnieżdżalnych w jednej linijce
+{
+   Token t;
+   String i;
+}
+{
+(
+	i=Footnotes()
+	|
+	i = Email()
+	|
+	i = Bolded()
+	|
+	i = CzystyTekst()
+	|
+	i = Italics()
+	|
+	i = Underlined()
+	|
+	i = Monospaced()
+	|
+	i=NoFormat()
+	|
+	i=NoWiki()
+	|
+	i=Sub()
+	|
+	i=Sup()
+	|
+	i=Del()
+	|
+	i=Link()
 	|
 	(t=<CODEO> | t=<CODEC> | t=<FILEO> | t=<FILEC>)
 		{i="&lt;"+t.image.substring(1,t.image.length()-1)+"&gt;";}	
@@ -558,23 +601,42 @@ String CodeFileBody() {
 
 String Quote():
 {
+	String value="";
 	String i;
 }
 {
-	LOOKAHEAD(<QUOTE1> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
-	(<QUOTE1> i=Zagniezdzalne() )
+	LOOKAHEAD(<QUOTE1> (Zagniezdzalne2())+ (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(
+	<QUOTE1> 
 		{System.out.print("QUOTE1 ");}
-		{return "<blockquote>"+i+"</blockquote>";}
+	(
+	LOOKAHEAD(Zagniezdzalne2() [<ENTER>]) i=Zagniezdzalne2()
+		{value+=i;}
+	)+
+	)
+		{return "<blockquote>"+value+"</blockquote>";}
 	| 
-	LOOKAHEAD(<QUOTE2> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
-	(<QUOTE2> i=Zagniezdzalne())
+	LOOKAHEAD(<QUOTE2> (Zagniezdzalne2())+ (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(
+	<QUOTE2> 
 		{System.out.print("QUOTE2 ");}
-		{return "<blockquote><blockquote>"+i+"</blockquote></blockquote>";}
+	(
+	LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+		{value+=i;}
+	)+
+	)
+		{return "<blockquote><blockquote>"+value+"</blockquote></blockquote>";}
 	| 
-	LOOKAHEAD(<QUOTE3> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
-	(<QUOTE3> i=Zagniezdzalne())
+	LOOKAHEAD(<QUOTE3> (Zagniezdzalne2())+ (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(
+	<QUOTE3> 
 		{System.out.print("QUOTE3 ");}
-		{return "<blockquote><blockquote><blockquote>"+i+"</blockquote></blockquote></blockquote>";}
+	(
+	LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+		{value+=i;}
+	)+
+	)
+		{return "<blockquote><blockquote><blockquote>"+value+"</blockquote></blockquote></blockquote>";}
 	
 }
 
