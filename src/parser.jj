@@ -102,7 +102,7 @@ TOKEN :
 
 TOKEN :
 {
-  < LINKO : "[[" >	//są też linki bez znaczników i linki z opisem, wypada dopracować
+  < LINKO : "[[" >
 | < LINKC : "]]" >
 }
 
@@ -561,13 +561,18 @@ String Quote():
 	String i;
 }
 {
-	(<QUOTE1> i=Zagniezdzalne() <ENTER> )
+	LOOKAHEAD(<QUOTE1> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(<QUOTE1> i=Zagniezdzalne() )
 		{System.out.print("QUOTE1 ");}
 		{return "<blockquote>"+i+"</blockquote>";}
-	| (<QUOTE2> i=Zagniezdzalne() <ENTER>)
+	| 
+	LOOKAHEAD(<QUOTE2> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(<QUOTE2> i=Zagniezdzalne())
 		{System.out.print("QUOTE2 ");}
 		{return "<blockquote><blockquote>"+i+"</blockquote></blockquote>";}
-	| (<QUOTE3> i=Zagniezdzalne() <ENTER>)
+	| 
+	LOOKAHEAD(<QUOTE3> i=Zagniezdzalne() (<ENTER> | <QUOTE1> | <QUOTE2> | <QUOTE3> | <EOF>))
+	(<QUOTE3> i=Zagniezdzalne())
 		{System.out.print("QUOTE3 ");}
 		{return "<blockquote><blockquote><blockquote>"+i+"</blockquote></blockquote></blockquote>";}
 	

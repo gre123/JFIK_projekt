@@ -9,77 +9,77 @@ public interface ParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int NUMER = 1;
+  int EMOTKA = 1;
   /** RegularExpression Id. */
-  int WORD = 2;
+  int NUMER = 2;
   /** RegularExpression Id. */
-  int ALNUM = 3;
+  int WORD = 3;
   /** RegularExpression Id. */
-  int ENTER = 4;
+  int ALNUM = 4;
   /** RegularExpression Id. */
-  int NOWALINIA = 5;
+  int ENTER = 5;
   /** RegularExpression Id. */
-  int CYFRA = 6;
+  int NOWALINIA = 6;
   /** RegularExpression Id. */
-  int LITERA = 7;
+  int CYFRA = 7;
   /** RegularExpression Id. */
-  int OGONEK = 8;
+  int LITERA = 8;
   /** RegularExpression Id. */
-  int MORETHANLITERA = 9;
+  int OGONEK = 9;
   /** RegularExpression Id. */
-  int KRESKA = 10;
+  int MORETHANLITERA = 10;
   /** RegularExpression Id. */
-  int H1 = 11;
+  int KRESKA = 11;
   /** RegularExpression Id. */
-  int H2 = 12;
+  int H1 = 12;
   /** RegularExpression Id. */
-  int H3 = 13;
+  int H2 = 13;
   /** RegularExpression Id. */
-  int H4 = 14;
+  int H3 = 14;
   /** RegularExpression Id. */
-  int H5 = 15;
+  int H4 = 15;
   /** RegularExpression Id. */
-  int HC = 16;
+  int H5 = 16;
   /** RegularExpression Id. */
-  int URL = 17;
+  int HC = 17;
   /** RegularExpression Id. */
-  int DOMENA = 18;
+  int URL = 18;
   /** RegularExpression Id. */
-  int EMAIL = 19;
+  int DOMENA = 19;
   /** RegularExpression Id. */
-  int EMAIL_NAZWA = 20;
+  int EMAIL = 20;
   /** RegularExpression Id. */
-  int LINKO = 21;
+  int EMAIL_NAZWA = 21;
   /** RegularExpression Id. */
-  int LINKC = 22;
+  int LINKO = 22;
   /** RegularExpression Id. */
-  int OBRO = 23;
+  int LINKC = 23;
   /** RegularExpression Id. */
-  int OBRC = 24;
+  int OBRO = 24;
   /** RegularExpression Id. */
-  int WYMIARY = 25;
+  int OBRC = 25;
   /** RegularExpression Id. */
-  int DOUBLE_SPACE = 26;
+  int WYMIARY = 26;
   /** RegularExpression Id. */
-  int DOUBLE_ENTER = 27;
+  int DOUBLE_SPACE = 27;
   /** RegularExpression Id. */
-  int LISTAN = 28;
+  int DOUBLE_ENTER = 28;
   /** RegularExpression Id. */
-  int LISTAP = 29;
+  int LISTAN = 29;
   /** RegularExpression Id. */
-  int BOLD = 30;
+  int LISTAP = 30;
   /** RegularExpression Id. */
-  int ITALICS = 31;
+  int BOLD = 31;
   /** RegularExpression Id. */
-  int UNDERLINE = 32;
+  int ITALICS = 32;
   /** RegularExpression Id. */
-  int NO_FORMAT = 33;
+  int UNDERLINE = 33;
   /** RegularExpression Id. */
-  int MONO = 34;
+  int NO_FORMAT = 34;
   /** RegularExpression Id. */
-  int SPACE = 35;
+  int MONO = 35;
   /** RegularExpression Id. */
-  int EMOTKA = 36;
+  int SPACE = 36;
   /** RegularExpression Id. */
   int SYMBOL = 37;
   /** RegularExpression Id. */
@@ -129,6 +129,7 @@ public interface ParserConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
+    "<EMOTKA>",
     "<NUMER>",
     "<WORD>",
     "<ALNUM>",
@@ -164,7 +165,6 @@ public interface ParserConstants {
     "\"%%\"",
     "\"\\\'\\\'\"",
     "\" \"",
-    "<EMOTKA>",
     "<SYMBOL>",
     "\"^\"",
     "\"|\"",
