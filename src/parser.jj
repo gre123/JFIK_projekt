@@ -233,18 +233,18 @@ String Start() throws NumberFormatException :
    |
    val=Obrazek()
 	{wynik += val;}
-	|	
+   |
    val=Emot()
 	{wynik += val;}
-   |	
-   <DOUBLE_SPACE>
-    {wynik+="&nbsp&nbsp";}
-    |
-     val=ListaP()
+   |
+   //<DOUBLE_SPACE>
+   // {wynik+="&nbsp&nbsp";}
+   //|
+     val=ListaU()
     {wynik += val;}
-     |
-     val=ListaN()
-    {wynik += val;}
+   //  |
+   //  val=ListaN()
+   // {wynik += val;}
    |
    	val = Quote()
 	{wynik += val;}
@@ -610,7 +610,7 @@ String Quote():
 	<QUOTE1> 
 		{System.out.print("QUOTE1 ");}
 	(
-	LOOKAHEAD(Zagniezdzalne2() [<ENTER>]) i=Zagniezdzalne2()
+	LOOKAHEAD(Zagniezdzalne2() [<ENTER>]) i=Zagniezdzalne2() //myślałem, że usunąłem ten [ENTER], chyba można go wywalić
 		{value+=i;}
 	)+
 	)
@@ -639,9 +639,60 @@ String Quote():
 		{return "<blockquote><blockquote><blockquote>"+value+"</blockquote></blockquote></blockquote>";}
 	
 }
+String ListaU():
+{
+	String value="";
+	String i;
+}
+{
+	(LOOKAHEAD(3)
+	{System.out.print("ListaUo ");}
+	i = ListaUElement()
+	{value+=i;}
+	)+
+	{System.out.print("ListaUc ");}
+	{return "<ul>"+value+"</ul>";}
+}
+String ListaUElement():
+{
+	String value="";
+	String i;
+}
+{
+	(
+		<LISTAN> 
+		{System.out.print("ListaN ");}
+		(
+		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+			{value+=i;}
+		)*
+		<ENTER>
+		{System.out.print("ListaUElement ");}
+		{return "<li>"+value+"</li>";}
+	)
+	|
+	(
+		value = ListaUZagniezdzona()
+		{return value;}
+	)
+}
+String ListaUZagniezdzona():
+{
+	String value="";
+	String i;
+}
+{
+		{System.out.print("ListaUZagniezdzonao ");}
+	(LOOKAHEAD(2)
+		<DOUBLE_SPACE> 
+		i=ListaUElement()
+		{value+=i;}
+	)+
+		{System.out.print("ListaUZagniezdzonac ");}
+		{return "<ul>"+value+"</ul>";}
+}
 
-
-String ListaN():
+/*String ListaN():
 {
 	String i="";
 	Token t;
@@ -662,7 +713,7 @@ String ListaP():
 	{System.out.print("Lista N wiersz ");}
 	{return "<li>"+i+"</li>";}
 }
-
+*/
 
 String Symbol():
 {
@@ -772,8 +823,8 @@ String Link():
 		}
 		}
 		{return "<a href="+l+">"+l+"</a>";}
-	|
-	<LINKO> (<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(2) t=<URL> | i=CzystyTekst()) <LINKC>
+	|LOOKAHEAD(4)
+	<LINKO> (LOOKAHEAD(4)<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(2) t=<URL> | i=CzystyTekst()) <LINKC>
 		{System.out.print("LINK3 ");
 		if (l==""){
 		l=tl.image;
