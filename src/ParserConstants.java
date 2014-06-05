@@ -164,7 +164,7 @@ public interface ParserConstants {
     "\"__\"",
     "\"%%\"",
     "\"\\\'\\\'\"",
-    "\" \"",
+    "<SPACE>",
     "<SYMBOL>",
     "\"^\"",
     "\"|\"",

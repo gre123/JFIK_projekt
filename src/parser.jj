@@ -129,7 +129,7 @@ TOKEN :
 | < UNDERLINE : "__" >
 | < NO_FORMAT : "%%" >
 | < MONO : "''" >
-| < SPACE : " " >
+| < SPACE : " " | "\t" >
 }
 //SKIP:{" "}
 
@@ -237,7 +237,7 @@ String Start() throws NumberFormatException :
    val=Emot()
 	{wynik += val;}
    |
-   <DOUBLE_SPACE>
+   LOOKAHEAD(2)<DOUBLE_SPACE>
     {wynik+="&nbsp&nbsp";}
    |
      val=ListaU()
@@ -247,6 +247,9 @@ String Start() throws NumberFormatException :
    // {wynik += val;}
    |
    	val = Quote()
+	{wynik += val;}
+	|LOOKAHEAD(2)
+   	val = Row()
 	{wynik += val;}
 	|
    val=Symbol()
@@ -691,29 +694,120 @@ String ListaUZagniezdzona():
 		{System.out.print("ListaUZagniezdzonac ");}
 		{return "<ul>"+value+"</ul>";}
 }
-
-/*String ListaN():
+String ListaO():
 {
-	String i="";
-	Token t;
+	String value="";
+	String i;
 }
 {
-	(<LISTAN> (LOOKAHEAD(2) (<SPACE>) | " ")*  i=Zagniezdzalne() (<ENTER>|<DOUBLE_ENTER>))
-	{System.out.print("Lista N wiersz ");}
-	{return "<li>"+i+"</li>";}
+	(LOOKAHEAD(3)
+	{System.out.print("ListaOo ");}
+	i = ListaOElement()
+	{value+=i;}
+	)+
+	{System.out.print("ListaOc ");}
+	{return "<ol>"+value+"</ol>";}
 }
-
-String ListaP():
+String ListaOElement():
 {
-	String i="";
-	Token t;
+	String value="";
+	String i;
 }
 {
-	(<LISTAP> (LOOKAHEAD(2) (<SPACE>) | " ")*  i=Zagniezdzalne() (<ENTER>|<DOUBLE_ENTER>))
-	{System.out.print("Lista N wiersz ");}
-	{return "<li>"+i+"</li>";}
+	(
+		<LISTAP> 
+		{System.out.print("ListaO ");}
+		(
+		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+			{value+=i;}
+		)*
+		<ENTER>
+		{System.out.print("ListaOElement ");}
+		{return "<li>"+value+"</li>";}
+	)
+	|
+	(
+		value = ListaOZagniezdzona()
+		{return value;}
+	)
 }
-*/
+String ListaOZagniezdzona():
+{
+	String value="";
+	String i;
+}
+{
+		{System.out.print("ListaOZagniezdzonao ");}
+	(LOOKAHEAD(2)
+		<DOUBLE_SPACE> 
+		i=ListaOElement()
+		{value+=i;}
+	)+
+		{System.out.print("ListaOZagniezdzonac ");}
+		{return "<ol>"+value+"</ol>";}
+}
+String Row():	//wiersz tabeli, tabela jest zbiorem wierszy
+{
+	String value="";
+	String i;
+}
+{
+	<ENTER>
+		{System.out.print("Tabelao ");}
+	( LOOKAHEAD(2)
+		( LOOKAHEAD(2)i=Komorka() | i=HKomorka() )
+		{value+=i;}
+	)+
+	(<KOLUMNA> | <HEADER>)?
+		{System.out.print("Tabelac ");}
+		{return "<tr>"+value+"</tr>\n";}
+}
+String Komorka():	//wiersz tabeli, tabela jest zbiorem wierszy
+{
+	String value="";
+	String i;
+	int count=0;
+}
+{
+		{System.out.print("Komórkao ");}
+	( 
+		<KOLUMNA> 
+		(
+		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+			{value+=i;}
+		)+
+		//LOOKAHEAD(<KOLUMNA><KOLUMNA>) //chyba jednak to gdzieś wypada wsadzić
+			(LOOKAHEAD(<KOLUMNA><KOLUMNA>) //a może lookahead(2) powinno być?
+			<KOLUMNA>
+			{count++;}
+			)*
+	)
+		{System.out.print("Komórkac ");}
+		{if (count==0) return "<td>"+value+"</td>"; else return "<td colspan=\""+ Integer.toString(count+1)+"\">"+value+"</td>";}
+}
+String HKomorka():	//wiersz tabeli, tabela jest zbiorem wierszy
+{
+	String value="";
+	String i;
+	int count=0;
+}
+{
+		{System.out.print("Komórkao ");}
+	( 
+		<HEADER> 
+		(
+		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
+			{value+=i;}
+		)+
+		//LOOKAHEAD(<KOLUMNA><KOLUMNA>) //chyba jednak to gdzieś wypada wsadzić
+			(LOOKAHEAD(<KOLUMNA><KOLUMNA>)
+			<KOLUMNA>
+			{count++;}
+			)*
+	)
+		{System.out.print("Komórkac ");}
+		{if (count==0) return "<th>"+value+"</th>"; else return "<td colspan=\""+ Integer.toString(count+1)+"\">"+value+"</td>";}
+}
 
 String Symbol():
 {
