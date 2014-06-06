@@ -1,3 +1,8 @@
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.PrintWriter;
+
 /**
  * @author epifaniusz
  */
@@ -24,9 +29,9 @@ public class Okno extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaOut = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("DokuWiki to HTML");
 
         jTextAreaIn.setColumns(20);
         jTextAreaIn.setRows(5);
@@ -43,20 +48,33 @@ public class Okno extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Parsuj do pliku");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
             .addComponent(jScrollPane1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -84,6 +102,38 @@ public class Okno extends javax.swing.JFrame {
     }
     System.out.println ("\nSkonczylem");                                     
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+     try{
+      PrintWriter z = new PrintWriter("elo.html");
+      java.io.StringReader sr = new java.io.StringReader(jTextAreaIn.getText());
+    System.out.println("Zaczynam skanowanie");
+    sk = new Parser(sr);
+    sk.enable_tracing();
+    String result="<p>";
+        try {
+            result += sk.Start();
+        } catch (ParseException ex) {
+            jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
+            System.out.println(ex.currentToken.image+"  "+ex.getMessage());
+        }
+    result += "</p>";
+
+    if (result==null){
+    }else{
+        jTextAreaOut.setText(result);
+    }
+    System.out.println ("\nSkonczylem");    
+    z.print(result);
+    
+    z.close();
+    File pl=new File("elo.html");
+    Desktop.getDesktop().browse(pl.toURI());
+      }catch(Exception e){System.out.println("blad zapisu lub wyswietlenia");};
+//Czytaj więcej na: http://javastart.pl/podstawy-jezyka/zapis-i-odczyt-z-plikow/#ixzz33rDmD2Ge
+        
+// TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -122,6 +172,7 @@ public class Okno extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextAreaIn;
