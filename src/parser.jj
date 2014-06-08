@@ -239,12 +239,12 @@ String Start() throws NumberFormatException :
    |
    LOOKAHEAD(2)<DOUBLE_SPACE>
     {wynik+="&nbsp&nbsp";}
-   |
+   |LOOKAHEAD(3)
      val=ListaU()
     {wynik += val;}
-   //  |
-   //  val=ListaN()
-   // {wynik += val;}
+   |
+     val=ListaO()
+    {wynik += val;}
    |
    	val = Quote()
 	{wynik += val;}
