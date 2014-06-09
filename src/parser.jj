@@ -1,12 +1,6 @@
-/* na pewno zadziała, przecież nie jestem debilem */
-
 options {
   STATIC = false;
   IGNORE_CASE = true;
-  //LOOKAHEAD=2;
-  //UNICODE_INPUT = true;
-  //JAVA_UNICODE_ESCAPE = false;
-
 }
 
 PARSER_BEGIN(Parser)
@@ -21,7 +15,6 @@ public class Parser {
 
     String result = interpreter.Start();
     System.out.println ("Start returns: " + result);
-   
   }
 
 }
@@ -30,20 +23,11 @@ PARSER_END(Parser)
 
 TOKEN :
 {
-  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
-	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
-	| ":-X" | ":-|" | ";-)" | "^_^"
-	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
-}
-
-TOKEN :
-{
   < NUMER : (< CYFRA >)+ >
 | < WORD: (< ALNUM > | < OGONEK >)+ | "\\\\" (< ALNUM > | < OGONEK >)+ >
 | < #ALNUM :
       < CYFRA >
     | < LITERA >
-	//| < MORETHANLITERA >	//może powodować problemy
   >
 | < ENTER :
     "\r"
@@ -52,19 +36,10 @@ TOKEN :
 | < NOWALINIA : "\\\\" >
 | < #CYFRA : [ "0"-"9" ] >
 | < #LITERA : [ "a"-"z", "A"-"Z" ] >
-/*| < #OGONEK : "\u0104" | "\u0105"
-    | "\u0106" | "\u0107"
-    | "\u0118" | "\u0119"
-    | "\u0141" | "\u0142"
-    | "\u0143" | "\u0144"
-    | "\u00d3" | "\u00f3"
-    | "\u015a" | "\u015b"
-    | "\u0179" | "\u017a"
-    | "\u017b" | "\u017c" >*/
 	
 | < #OGONEK : "\u00a4" | "\u00a5" | "\u00a8" | "\u00a9" | "\u2014" | "\ufffd" | "\u02dd" | "\u013e" | "\u0104" | "\u0179" | "\u201a"
 	| "\u0164" | "\u00ab" | "\u2020" | "\u0103" | "\u00e4" | "\u02d8" | "\u0155" | "\u0165" | "\ufffd"| "\u0139" | "\u0142" | "\u2021" | "\u2122" | "\u203a"
-	| "\u2026" | "\u015f" | "\u201e"	//wciąż są nie wszystkie ale windows jakoś strasznie dziwnie je koduje
+	| "\u2026" | "\u015f" | "\u201e"	//wciąż są nie wszystkie ale windows ma inne kodowanie znaków w konsoli a inne w plikach.
 	|"\u0104" | "\u0105"
     | "\u0106" | "\u0107"
     | "\u0118" | "\u0119"
@@ -76,6 +51,14 @@ TOKEN :
     | "\u017b" | "\u017c">
 | < MORETHANLITERA : "~" | "`" | "!" | "@" | "#" | "$" | "%" | "&" | "(" | ")" | "_" | "+" | "=" | "{" | "}" | "[" | "]"
 | ";" | ":" | "'" | "\"" | "\\" | "<" | ">" | "," | "." | "/" | "?" | "*" | "-">		/*czyli chyba dowolny znak na klawiaturze*/
+}
+
+TOKEN :
+{
+  < EMOTKA :  "8-)" | "8-O" | ":-(" | ":-)" | "=)"
+	| ":-/" | ":-\\" | ":-?" | ":-D" | ":-P" | ":-O"
+	| ":-X" | ":-|" | ";-)" | "^_^"
+	| ":?:" | ":!:" | "LOL" | "FIXME" | "DELETEME" >
 }
 
 TOKEN :
@@ -96,8 +79,8 @@ TOKEN :
     < DOMENA >
     ( "/" (< WORD >)* ("." < WORD >)* )* >
 | < DOMENA : ((< ALNUM >)+ ".")+ < WORD >>
-| < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">	//email nie jest rozpoznawany sam z siebie, ale ze znacznikami <> powinien być
-| < #EMAIL_NAZWA : ((< ALNUM >)+ ".")* (< ALNUM >)+>	//prawie jak domena, ale nie całkiem
+| < EMAIL : "<" < EMAIL_NAZWA > "@" <DOMENA > ">">
+| < #EMAIL_NAZWA : ((< ALNUM >)+ ".")* (< ALNUM >)+>
 }
 
 TOKEN :
@@ -114,16 +97,11 @@ TOKEN :
 
 TOKEN :
 {
-  < WYMIARY : "?" < NUMER > "x" < NUMER >>	//razem z pytajnikiem
-  
+< WYMIARY : "?" < NUMER > "x" < NUMER >>
 | < DOUBLE_SPACE : "  " >
 | < DOUBLE_ENTER : <ENTER> <ENTER> >
 | < LISTAN : < DOUBLE_SPACE > "*" >
 | < LISTAP : < DOUBLE_SPACE > "-" >
-//| < LISTANWIERSZ : < LISTAN > (<WORD>)* <ENTER>  >
-//| < WIERSZKILKAN : (<WIERSZN>)*  >
-
-
 | < BOLD : "**" >
 | < ITALICS : "//" >
 | < UNDERLINE : "__" >
@@ -131,10 +109,6 @@ TOKEN :
 | < MONO : "''" >
 | < SPACE : " " | "\t" >
 }
-//SKIP:{" "}
-
-
-
 
 TOKEN :
 {
@@ -183,24 +157,24 @@ TOKEN :
 
 TOKEN :
 {
-  < FILEO : "<file>" >		//załatwione
+  < FILEO : "<file>" >
 | < FILEC : "</file>" >
 }
 
 TOKEN :
 {
-  < NOWIKIO : "<nowiki>" >	//załatwione
+  < NOWIKIO : "<nowiki>" >
 | < NOWIKIC : "</nowiki>" >
 }
 
 TOKEN :
 {
-  < FOOTNOTEO : "((" >		//to nie będzie łatwe do parsowania
+  < FOOTNOTEO : "((" >
 | < FOOTNOTEC : "))" >
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-//Odtąd jest definicja parsera
+//Odtąd jest ścisła definicja parsera
 ///////////////////////////////////////////////////////////////////////////////////////////
 String Start() throws NumberFormatException :
 {
@@ -220,43 +194,43 @@ String Start() throws NumberFormatException :
 	{wynik += val;}
    |
    val=Head4()
-	{wynik += val;}
+		{wynik += val;}
    |
    val=Head5()
-	{wynik += val;}
+		{wynik += val;}
    |LOOKAHEAD(2)
    val=Code()
-	{wynik += val;}
-   |LOOKAHEAD(2)
+		{wynik += val;}
+	|LOOKAHEAD(2)
    val=File()
-	{wynik += val;}
+		{wynik += val;}
    |
    val=Obrazek()
-	{wynik += val;}
+		{wynik += val;}
    |
    val=Emot()
-	{wynik += val;}
+		{wynik += val;}
    |
    LOOKAHEAD(2)<DOUBLE_SPACE>
-    {wynik+="&nbsp&nbsp";}
+		{wynik+="&nbsp&nbsp";}
    |LOOKAHEAD(3)
-     val=ListaU()
-    {wynik += val;}
+	val=ListaU()
+		{wynik += val;}
    |
-     val=ListaO()
-    {wynik += val;}
+	val=ListaO()
+		{wynik += val;}
    |
-   	val = Quote()
-	{wynik += val;}
+   val = Quote()
+		{wynik += val;}
 	|LOOKAHEAD(2)
-   	val = Row()
-	{wynik += val;}
+   val = Table()
+		{wynik += val;}
 	|
    val=Symbol()
-    {wynik += val;}
-     |
+		{wynik += val;}
+   |
    val = Zagniezdzalne()
-	{wynik += val;}
+		{wynik += val;}
  )*
  <EOF>
  {return "<p>" + wynik + "</p>"; }
@@ -271,20 +245,16 @@ String Zagniezdzalne() throws NumberFormatException :
 (
 	i=Footnotes()
 	|
-	//i = Quote()
-	//|
 	i = Email()
 	|
 	i = Bolded()
 	|
-		//LOOKAHEAD(CzystyTekst()) 
 	i = CzystyTekst()
 	|
 	<ENTER>
 	{i="";}
 	{System.out.print("ENTER ");}
 	|
-		//LOOKAHEAD(Italics()) 
 	i = Italics()
 	|
 	i = Underlined()
@@ -356,6 +326,7 @@ String Zagniezdzalne2() throws NumberFormatException : //do rzeczy zagnieżdżal
 )
  {return i;}
 }
+
 String Bolded():
 	{
 		String i;
@@ -363,16 +334,16 @@ String Bolded():
 	}
 	{
 		<BOLD>
-		{System.out.print("BOLD ");}
-		{value="<strong>";}
+			{System.out.print("BOLD ");}
+			{value="<strong>";}
 		(
 		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
-		{value+=i;}
+			{value+=i;}
 		)+
 		<BOLD>
-		{System.out.print("BOLD ");}
-		{value+="</strong>";}
-		{return value;}
+			{System.out.print("BOLD ");}
+			{value+="</strong>";}
+			{return value;}
 	}
 	
 String Italics():
@@ -382,16 +353,16 @@ String Italics():
 	}
 	{
 		<ITALICS>
-		{System.out.print("ITALICS ");}
-		{value="<em>";}
+			{System.out.print("ITALICS ");}
+			{value="<em>";}
 		(
 		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
-		{value+=i;}
+			{value+=i;}
 		)+
 		<ITALICS>
-		{System.out.print("ITALICS ");}
-		{value+="</em>";}
-		{return value;}
+			{System.out.print("ITALICS ");}
+			{value+="</em>";}
+			{return value;}
 	}
 	
 String Underlined():
@@ -401,16 +372,16 @@ String Underlined():
 	}
 	{
 		<UNDERLINE>
-		{System.out.print("UNDERLINE ");}
-		{value="<u>";}
+			{System.out.print("UNDERLINE ");}
+			{value="<u>";}
 		(
 		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
-		{value+=i;}
+			{value+=i;}
 		)+
 		<UNDERLINE>
-		{System.out.print("UNDERLINE ");}
-		{value+="</u>";}
-		{return value;}
+			{System.out.print("UNDERLINE ");}
+			{value+="</u>";}
+			{return value;}
 	}
 	
 String Monospaced():
@@ -420,21 +391,21 @@ String Monospaced():
 	}
 	{
 		<MONO>
-		{System.out.print("MONO ");}
-		{value="<code>";}
+			{System.out.print("MONO ");}
+			{value="<code>";}
 		(
 		LOOKAHEAD(Zagniezdzalne()) i=Zagniezdzalne()
-		{value+=i;}
+			{value+=i;}
 		)+
 		<MONO>
-		{System.out.print("MONO ");}
-		{value+="</code>";}
-		{return value;}
+			{System.out.print("MONO ");}
+			{value+="</code>";}
+			{return value;}
 	}
 
 JAVACODE
 String NoFormatBody() {
-      Token tok;
+     Token tok;
 	  String i="";
       while (true) {
         tok = getToken(1);
@@ -462,53 +433,53 @@ String NoFormat():
 	{String i;}
 	{
 	<NO_FORMAT> i=NoFormatBody() <NO_FORMAT>
-	{System.out.print("NO_FORMAT costam NO_FORMAT ");}
-	{return i;}
+		{System.out.print("NO_FORMAT costam NO_FORMAT ");}
+		{return i;}
 	}
 	
 String NoWiki():
 	{String i;}
 	{
 	<NOWIKIO> i=NoWikiBody() <NOWIKIC>
-	{System.out.print("NOWIKIo costam NOWIKIc ");}
-	{return i;}
+		{System.out.print("NOWIKIo costam NOWIKIc ");}
+		{return i;}
 	}
 	
 String Sub():
 	{String i;}
 	{
 	<SUBO> 
-	{System.out.print("SUBo");}
+		{System.out.print("SUBo");}
 	i=Zagniezdzalne() 
 	<SUBC>
-	{System.out.print("SUBc");}
-	{return "<sub>"+i+"</sub>";}
+		{System.out.print("SUBc");}
+		{return "<sub>"+i+"</sub>";}
 	}
 	
 String Sup():
 	{String i;}
 	{
 	<SUPO> 
-	{System.out.print("SUBo");}
+		{System.out.print("SUBo");}
 	i=Zagniezdzalne() 
 	<SUPC>
-	{System.out.print("SUBc");}
-	{return "<sup>"+i+"</sup>";}
+		{System.out.print("SUBc");}
+		{return "<sup>"+i+"</sup>";}
 	}
 String Del():
 	{String i;}
 	{
 	<DELO> 
-	{System.out.print("DELo");}
+		{System.out.print("DELo");}
 	i=Zagniezdzalne() 
 	<DELC>
-	{System.out.print("DELc");}
-	{return "<del>"+i+"</del>";}
+		{System.out.print("DELc");}
+		{return "<del>"+i+"</del>";}
 	}
 	
 JAVACODE
 String HeadBody() {
-      Token tok;
+     Token tok;
 	  String i="";
       while (true) {
         tok = getToken(1);
@@ -525,8 +496,8 @@ String Head1():
 }
 {
 	(<H1> i=HeadBody() <HC>)
-	{System.out.print("H1 costam Hc ");}
-	{return "<h1>"+i+"</h1>";}
+		{System.out.print("H1 costam Hc ");}
+		{return "<h1>"+i+"</h1>";}
 }
 
 String Head2():
@@ -535,8 +506,8 @@ String Head2():
 }
 {
 	(<H2> i=HeadBody() <HC>)
-	{System.out.print("H2 costam Hc ");}
-	{return "<h2>"+i+"</h2>";}
+		{System.out.print("H2 costam Hc ");}
+		{return "<h2>"+i+"</h2>";}
 }
 
 String Head3():
@@ -545,8 +516,8 @@ String Head3():
 }
 {
 	(<H3> i=HeadBody() <HC>)
-	{System.out.print("H3 costam Hc ");}
-	{return "<h3>"+i+"</h3>";}
+		{System.out.print("H3 costam Hc ");}
+		{return "<h3>"+i+"</h3>";}
 }
 
 String Head4():
@@ -555,8 +526,8 @@ String Head4():
 }
 {
 	(<H4> i=HeadBody() <HC>)
-	{System.out.print("H4 costam Hc ");}
-	{return "<h4>"+i+"</h4>";}
+		{System.out.print("H4 costam Hc ");}
+		{return "<h4>"+i+"</h4>";}
 }
 
 String Head5():
@@ -565,8 +536,8 @@ String Head5():
 }
 {
 	(<H5> i=HeadBody() <HC>)
-	{System.out.print("H5 costam Hc ");}
-	{return "<h5>"+i+"</h5>";}
+		{System.out.print("H5 costam Hc ");}
+		{return "<h5>"+i+"</h5>";}
 }
 
 String Code():
@@ -575,8 +546,8 @@ String Code():
 }
 {
 	(<CODEO> i=CodeFileBody() <CODEC>)
-	{System.out.print("CODEo costam CODEc ");}
-	{return "<pre>"+i+"</pre>";}
+		{System.out.print("CODEo costam CODEc ");}
+		{return "<pre>"+i+"</pre>";}
 }
 
 String File():
@@ -585,13 +556,13 @@ String File():
 }
 {
 	(<FILEO> i=CodeFileBody() <FILEC>)
-	{System.out.print("FILEo costam FILEc ");}
-	{return "<pre>"+i+"</pre>";}
+		{System.out.print("FILEo costam FILEc ");}
+		{return "<pre>"+i+"</pre>";}
 }
 
 JAVACODE
 String CodeFileBody() {
-      Token tok;
+     Token tok;
 	  String i="";
       while (true) {
         tok = getToken(1);
@@ -613,7 +584,7 @@ String Quote():
 	<QUOTE1> 
 		{System.out.print("QUOTE1 ");}
 	(
-	LOOKAHEAD(Zagniezdzalne2() [<ENTER>]) i=Zagniezdzalne2() //myślałem, że usunąłem ten [ENTER], chyba można go wywalić
+	LOOKAHEAD(Zagniezdzalne2() [<ENTER>]) i=Zagniezdzalne2()
 		{value+=i;}
 	)+
 	)
@@ -649,12 +620,12 @@ String ListaU():
 }
 {
 	(LOOKAHEAD(3)
-	{System.out.print("ListaUo ");}
+		{System.out.print("ListaUo ");}
 	i = ListaUElement()
-	{value+=i;}
+		{value+=i;}
 	)+
-	{System.out.print("ListaUc ");}
-	{return "<ul>"+value+"</ul>";}
+		{System.out.print("ListaUc ");}
+		{return "<ul>"+value+"</ul>";}
 }
 String ListaUElement():
 {
@@ -664,19 +635,19 @@ String ListaUElement():
 {
 	(
 		<LISTAN> 
-		{System.out.print("ListaN ");}
+			{System.out.print("ListaN ");}
 		(
 		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
 			{value+=i;}
 		)*
 		<ENTER>
-		{System.out.print("ListaUElement ");}
-		{return "<li>"+value+"</li>";}
+			{System.out.print("ListaUElement ");}
+			{return "<li>"+value+"</li>";}
 	)
 	|
 	(
 		value = ListaUZagniezdzona()
-		{return value;}
+			{return value;}
 	)
 }
 String ListaUZagniezdzona():
@@ -685,14 +656,14 @@ String ListaUZagniezdzona():
 	String i;
 }
 {
-		{System.out.print("ListaUZagniezdzonao ");}
+			{System.out.print("ListaUZagniezdzonao ");}
 	(LOOKAHEAD(2)
 		<DOUBLE_SPACE> 
 		i=ListaUElement()
-		{value+=i;}
+			{value+=i;}
 	)+
-		{System.out.print("ListaUZagniezdzonac ");}
-		{return "<ul>"+value+"</ul>";}
+			{System.out.print("ListaUZagniezdzonac ");}
+			{return "<ul>"+value+"</ul>";}
 }
 String ListaO():
 {
@@ -701,12 +672,12 @@ String ListaO():
 }
 {
 	(LOOKAHEAD(3)
-	{System.out.print("ListaOo ");}
+		{System.out.print("ListaOo ");}
 	i = ListaOElement()
-	{value+=i;}
+		{value+=i;}
 	)+
-	{System.out.print("ListaOc ");}
-	{return "<ol>"+value+"</ol>";}
+		{System.out.print("ListaOc ");}
+		{return "<ol>"+value+"</ol>";}
 }
 String ListaOElement():
 {
@@ -716,19 +687,19 @@ String ListaOElement():
 {
 	(
 		<LISTAP> 
-		{System.out.print("ListaO ");}
+			{System.out.print("ListaO ");}
 		(
 		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
 			{value+=i;}
 		)*
 		<ENTER>
-		{System.out.print("ListaOElement ");}
-		{return "<li>"+value+"</li>";}
+			{System.out.print("ListaOElement ");}
+			{return "<li>"+value+"</li>";}
 	)
 	|
 	(
 		value = ListaOZagniezdzona()
-		{return value;}
+			{return value;}
 	)
 }
 String ListaOZagniezdzona():
@@ -741,12 +712,28 @@ String ListaOZagniezdzona():
 	(LOOKAHEAD(2)
 		<DOUBLE_SPACE> 
 		i=ListaOElement()
+			{value+=i;}
+	)+
+			{System.out.print("ListaOZagniezdzonac ");}
+			{return "<ol>"+value+"</ol>";}
+}
+String Table():
+{
+	String value="";
+	String i;
+}
+{
+		{System.out.print("CalaTabelao ");}
+	(LOOKAHEAD(2)
+	i=Row()
 		{value+=i;}
 	)+
-		{System.out.print("ListaOZagniezdzonac ");}
-		{return "<ol>"+value+"</ol>";}
+	(<KOLUMNA> | <HEADER>)?
+		{System.out.print("CalaTabelac ");}
+		{return "<table>"+value+"</table>\n";}
 }
-String Row():	//wiersz tabeli, tabela jest zbiorem wierszy
+
+String Row():
 {
 	String value="";
 	String i;
@@ -758,11 +745,12 @@ String Row():	//wiersz tabeli, tabela jest zbiorem wierszy
 		( LOOKAHEAD(2)i=Komorka() | i=HKomorka() )
 		{value+=i;}
 	)+
-	(<KOLUMNA> | <HEADER>)?
+	( LOOKAHEAD(2) (<KOLUMNA> | <HEADER>))?
 		{System.out.print("Tabelac ");}
 		{return "<tr>"+value+"</tr>\n";}
 }
-String Komorka():	//wiersz tabeli, tabela jest zbiorem wierszy
+
+String Komorka():
 {
 	String value="";
 	String i;
@@ -776,8 +764,7 @@ String Komorka():	//wiersz tabeli, tabela jest zbiorem wierszy
 		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
 			{value+=i;}
 		)+
-		//LOOKAHEAD(<KOLUMNA><KOLUMNA>) //chyba jednak to gdzieś wypada wsadzić
-			(LOOKAHEAD(<KOLUMNA><KOLUMNA>) //a może lookahead(2) powinno być?
+			(LOOKAHEAD(<KOLUMNA><KOLUMNA>)
 			<KOLUMNA>
 			{count++;}
 			)*
@@ -785,7 +772,8 @@ String Komorka():	//wiersz tabeli, tabela jest zbiorem wierszy
 		{System.out.print("Komórkac ");}
 		{if (count==0) return "<td>"+value+"</td>"; else return "<td colspan=\""+ Integer.toString(count+1)+"\">"+value+"</td>";}
 }
-String HKomorka():	//wiersz tabeli, tabela jest zbiorem wierszy
+
+String HKomorka():
 {
 	String value="";
 	String i;
@@ -799,10 +787,9 @@ String HKomorka():	//wiersz tabeli, tabela jest zbiorem wierszy
 		LOOKAHEAD(Zagniezdzalne2()) i=Zagniezdzalne2()
 			{value+=i;}
 		)+
-		//LOOKAHEAD(<KOLUMNA><KOLUMNA>) //chyba jednak to gdzieś wypada wsadzić
 			(LOOKAHEAD(<KOLUMNA><KOLUMNA>)
 			<KOLUMNA>
-			{count++;}
+				{count++;}
 			)*
 	)
 		{System.out.print("Komórkac ");}
@@ -832,7 +819,6 @@ String Symbol():
 	if(t.image.equals("(r)")){System.out.print(t.image);return "&#174";}
 	 return "" ;
 	}
-	  
 }
 
 String Emot():
@@ -868,7 +854,7 @@ String Emot():
 	  
 }
 
-String Footnotes()://to jest bezsensu bo trzeb jeszcze skrypttty zrobic
+String Footnotes():	//brakuje odpowiedniego pliku css żeby to wyglądało prawidłowo.
 {
 	String i;
 }
@@ -878,6 +864,7 @@ String Footnotes()://to jest bezsensu bo trzeb jeszcze skrypttty zrobic
 		{return "<div id=\"insitu__fn\" class=\"insitu-footnote JSpopup\" aria-hidden=\"true\" role=\"tooltip\" style=\"top: 3203.109375px; left: 202px; display: none;\">"+i+"</div>";}
 	
 }
+
 String Obrazek():
 {
 	String i="";
@@ -885,19 +872,16 @@ String Obrazek():
 	String wynik="";
 }
 {
-	
 	(<OBRO> (LOOKAHEAD(3)  t=<URL> | t=<DOMENA> | i=CzystyTekst() )  <OBRC>)
 		{System.out.print("Obrazek ");
-		if(i==""){
-		i=t.image;
-		}
+			if(i==""){
+				i=t.image;
+			}
 		}
 		{wynik+= "<img src="+i+" />";}
 
 	{return wynik;}	
-	
 }
-
 
 String Link():
 {
@@ -911,28 +895,27 @@ String Link():
 		{System.out.print("LINK ");}
 		{return "<a href="+t.image+">"+t.image+"</a>";}
 	| LOOKAHEAD(3)
-	<LINKO> (LOOKAHEAD(3) tl=<URL> | tl =<DOMENA>  | l=CzystyTekst()  ) <LINKC>	//to powinien być też link wewnętrzny do sekcji, ale nie wiem skąd wziąć aktualny adres strony
+	<LINKO> (LOOKAHEAD(3) tl=<URL> | tl =<DOMENA>  | l=CzystyTekst()  ) <LINKC>
 		{System.out.print("LINK2 ");
-		if (l==""){
-		l=tl.image;
-		}
+			if (l==""){
+				l=tl.image;
+			}
 		}
 		{return "<a href="+l+">"+l+"</a>";}
 	|LOOKAHEAD(4)
 	<LINKO> (LOOKAHEAD(4)<SPACE>)*   (LOOKAHEAD(3)  tl=<URL>|tl =<DOMENA>  | l=CzystyTekst()  ) (<SPACE>)* <KOLUMNA> (LOOKAHEAD(3) t=<URL> | t =<DOMENA> |i=CzystyTekst()) <LINKC>
 		{System.out.print("LINK3 ");
-		if (l==""){
-		l=tl.image;
-		}
+			if (l==""){
+				l=tl.image;
+			}
 		if (i==""){
-		i=t.image;
-		}
+				i=t.image;
+			}
 		}
 		{return "<a href=\""+l+"\" title=\""+l+"\">"+i+"</a>";}
-
 }
 
-String Email():	//już powinno działać
+String Email():
 {
 	Token t;
 	String i;
@@ -951,12 +934,8 @@ String Slowo():
 		t= <WORD>
 		|
 		t= <NUMER>
-		//|
-		//t= <ENTER>
-		//|
-		//t= <MORETHANLITERA>
 		)
-		{return t.image;}
+			{return t.image;}
 	}
 	
 String CzystyTekst():
@@ -967,20 +946,16 @@ String CzystyTekst():
 	{
 		(LOOKAHEAD(2)
 		(
-		//t=<ENTER>
-		//|
 		i=Slowo()
-		{value+=i;}
+			{value+=i;}
 		|
 		t = <MORETHANLITERA>
-		{ 
-		value +=t.image; 
-		}
+			{ value +=t.image; }
 		|
 		t=<SPACE>
-		{value+=" ";}
+			{value+=" ";}
 		)
 		)+
-		{System.out.print("CzystyTekst ");}
-		{return value;}
+			{System.out.print("CzystyTekst ");}
+			{return value;}
 	}

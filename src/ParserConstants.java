@@ -9,25 +9,25 @@ public interface ParserConstants {
   /** End of File. */
   int EOF = 0;
   /** RegularExpression Id. */
-  int EMOTKA = 1;
+  int NUMER = 1;
   /** RegularExpression Id. */
-  int NUMER = 2;
+  int WORD = 2;
   /** RegularExpression Id. */
-  int WORD = 3;
+  int ALNUM = 3;
   /** RegularExpression Id. */
-  int ALNUM = 4;
+  int ENTER = 4;
   /** RegularExpression Id. */
-  int ENTER = 5;
+  int NOWALINIA = 5;
   /** RegularExpression Id. */
-  int NOWALINIA = 6;
+  int CYFRA = 6;
   /** RegularExpression Id. */
-  int CYFRA = 7;
+  int LITERA = 7;
   /** RegularExpression Id. */
-  int LITERA = 8;
+  int OGONEK = 8;
   /** RegularExpression Id. */
-  int OGONEK = 9;
+  int MORETHANLITERA = 9;
   /** RegularExpression Id. */
-  int MORETHANLITERA = 10;
+  int EMOTKA = 10;
   /** RegularExpression Id. */
   int KRESKA = 11;
   /** RegularExpression Id. */
@@ -129,7 +129,6 @@ public interface ParserConstants {
   /** Literal token values. */
   String[] tokenImage = {
     "<EOF>",
-    "<EMOTKA>",
     "<NUMER>",
     "<WORD>",
     "<ALNUM>",
@@ -139,6 +138,7 @@ public interface ParserConstants {
     "<LITERA>",
     "<OGONEK>",
     "<MORETHANLITERA>",
+    "<EMOTKA>",
     "<KRESKA>",
     "<H1>",
     "\"=====\"",
