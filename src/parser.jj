@@ -259,7 +259,7 @@ String Start() throws NumberFormatException :
 	{wynik += val;}
  )*
  <EOF>
- {return wynik; }
+ {return "<p>" + wynik + "</p>"; }
 }
 
 String Zagniezdzalne() throws NumberFormatException :

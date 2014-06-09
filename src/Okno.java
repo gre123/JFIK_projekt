@@ -83,18 +83,17 @@ public class Okno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-    java.io.StringReader sr = new java.io.StringReader(jTextAreaIn.getText());
+    java.io.StringReader sr = new java.io.StringReader("\n"+jTextAreaIn.getText()+"\n");
     System.out.println("Zaczynam skanowanie");
     sk = new Parser(sr);
     sk.enable_tracing();
-    String result="<p>";
+    String result = null;
         try {
-            result += sk.Start();
+            result = sk.Start();
         } catch (ParseException ex) {
             jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
             System.out.println(ex.currentToken.image+"  "+ex.getMessage());
         }
-    result += "</p>";
 
     if (result==null){
     }else{
@@ -105,19 +104,18 @@ public class Okno extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
      try{
-      PrintWriter z = new PrintWriter("elo.html");
-      java.io.StringReader sr = new java.io.StringReader(jTextAreaIn.getText());
+      PrintWriter z = new PrintWriter("wynik.html");
+      java.io.StringReader sr = new java.io.StringReader("\n"+jTextAreaIn.getText()+"\n");
     System.out.println("Zaczynam skanowanie");
     sk = new Parser(sr);
     sk.enable_tracing();
-    String result="<p>";
+    String result= null;
         try {
-            result += sk.Start();
+            result = sk.Start();
         } catch (ParseException ex) {
             jTextAreaOut.setText("błąd w "+ex.currentToken.image+"  "+ex.getMessage());
             System.out.println(ex.currentToken.image+"  "+ex.getMessage());
         }
-    result += "</p>";
 
     if (result==null){
     }else{
@@ -127,10 +125,9 @@ public class Okno extends javax.swing.JFrame {
     z.print(result);
     
     z.close();
-    File pl=new File("elo.html");
+    File pl=new File("wynik.html");
     Desktop.getDesktop().browse(pl.toURI());
-      }catch(Exception e){System.out.println("blad zapisu lub wyswietlenia");};
-//Czytaj więcej na: http://javastart.pl/podstawy-jezyka/zapis-i-odczyt-z-plikow/#ixzz33rDmD2Ge
+      }catch(Exception e){System.out.println("Błąd, nie udało się wyświetlić wyniku");};
         
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed

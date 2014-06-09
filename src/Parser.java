@@ -179,7 +179,7 @@ public class Parser implements ParserConstants {
       }
     }
     jj_consume_token(0);
-  {if (true) return wynik;}
+  {if (true) return "<p>" + wynik + "</p>";}
     throw new Error("Missing return statement in function");
   }
 
