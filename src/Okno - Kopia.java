@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 /**
  * @author epifaniusz rhhreh4ourhewpougbiwtbdlgblisb
  */
-public class Okno extends javax.swing.JFrame {
+public class OknoK extends javax.swing.JFrame {
     Parser sk=null;
     /**
      * Creates new form Okno
