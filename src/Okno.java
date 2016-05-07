@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 
 /**
- * @author epifaniusz
+ * @author epifaniusz rhhreh4ourhewpougbiwtbdlgblisb
  */
 public class Okno extends javax.swing.JFrame {
     Parser sk=null;
